@@ -10,16 +10,15 @@ export default function PerformanceTable({ stallion }: { stallion: Stallion }) {
       subtitle="Where possible, records should be verified through official results."
     >
       {rows.length === 0 ? (
-        <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700">
+        <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4 text-sm text-zinc-500">
           No verified performance records.
         </div>
       ) : (
-        <div className="overflow-hidden rounded-lg border border-zinc-200">
-          {/* ✅ responsive wrapper */}
+        <div className="overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950 shadow-md shadow-black/30">
           <div className="w-full overflow-x-auto">
-            <table className="min-w-[860px] w-full border-collapse">
-              <thead className="bg-zinc-50">
-                <tr className="text-left text-xs font-medium text-zinc-600">
+            <table className="min-w-215 w-full border-collapse">
+              <thead className="bg-zinc-900">
+                <tr className="text-left text-xs font-medium text-zinc-400">
                   <th className="whitespace-nowrap px-4 py-3">Year</th>
                   <th className="whitespace-nowrap px-4 py-3">
                     Association / Event
@@ -28,8 +27,6 @@ export default function PerformanceTable({ stallion }: { stallion: Stallion }) {
                     Discipline / Class
                   </th>
                   <th className="whitespace-nowrap px-4 py-3">Result</th>
-
-                  {/* ✅ hide reference on very small screens */}
                   <th className="hidden whitespace-nowrap px-4 py-3 sm:table-cell">
                     Reference
                   </th>
@@ -40,31 +37,30 @@ export default function PerformanceTable({ stallion }: { stallion: Stallion }) {
                 {rows.map((r, idx) => (
                   <tr
                     key={idx}
-                    className="border-t border-zinc-200 text-sm text-zinc-800"
+                    className="border-t border-zinc-800 text-sm text-zinc-300 hover:bg-zinc-900/60 transition"
                   >
                     <td className="whitespace-nowrap px-4 py-3 align-top">
                       {r.year}
                     </td>
 
                     <td className="px-4 py-3 align-top">
-                      <div className="min-w-[220px]">{r.event}</div>
+                      <div className="min-w-55">{r.event}</div>
                     </td>
 
                     <td className="px-4 py-3 align-top">
-                      <div className="min-w-[220px]">{r.discipline}</div>
+                      <div className="min-w-55">{r.discipline}</div>
                     </td>
 
                     <td className="px-4 py-3 align-top">
-                      <div className="min-w-[180px]">{r.result}</div>
+                      <div className="min-w-45">{r.result}</div>
                     </td>
 
-                    {/* ✅ hide reference on very small screens */}
                     <td className="hidden px-4 py-3 align-top sm:table-cell">
                       {r.reference?.href ? (
                         <a
                           href={r.reference.href}
                           target="_blank"
-                          className="whitespace-nowrap text-zinc-800 hover:underline"
+                          className="whitespace-nowrap text-[#D4AF37] hover:underline"
                         >
                           {r.reference.label || "Link"}
                         </a>
@@ -78,8 +74,7 @@ export default function PerformanceTable({ stallion }: { stallion: Stallion }) {
             </table>
           </div>
 
-          {/* ✅ small helper text for mobile scroll */}
-          <div className="border-t border-zinc-200 bg-white p-3 text-xs text-zinc-500 sm:hidden">
+          <div className="border-t border-zinc-800 bg-zinc-900 p-3 text-xs text-zinc-500 sm:hidden">
             Swipe horizontally to view full table.
           </div>
         </div>

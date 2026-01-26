@@ -3,9 +3,9 @@ import Section from "./Section";
 
 function Node(props: { title: string; value?: string }) {
   return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-4">
-      <p className="text-xs font-medium text-zinc-500">{props.title}</p>
-      <p className="mt-1 text-sm font-medium text-zinc-900">
+    <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4 shadow-sm shadow-black/30">
+      <p className="text-xs font-medium text-zinc-400">{props.title}</p>
+      <p className="mt-1 text-sm font-medium text-zinc-100">
         {props.value || "—"}
       </p>
     </div>

@@ -5,10 +5,10 @@ import { formatCurrency } from "../../lib/utils";
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="grid gap-1 py-3 sm:grid-cols-[170px_1fr] sm:gap-3 sm:py-2">
-      <p className="text-xs font-medium text-zinc-500">{label}</p>
+      <p className="text-xs font-medium text-zinc-300">{label}</p>
 
       {/* ✅ makes long text / urls wrap nicely */}
-      <div className="text-sm text-zinc-800 break-words">
+      <div className="text-sm text-zinc-400 wrap-break-word">
         {value}
       </div>
     </div>
@@ -51,7 +51,7 @@ export default function BreedingDetails({ stallion }: { stallion: Stallion }) {
                     href={stallion.breedingServiceProviderUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-zinc-800 hover:underline"
+                    className="text-zinc-400 hover:underline"
                   >
                     {stallion.breedingServiceProvider || "View link"}
                   </a>

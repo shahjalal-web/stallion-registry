@@ -16,24 +16,28 @@ export default function StallionDirectoryFilters(props: {
   onReset: () => void;
 }) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-4">
+    <div className="rounded-xl border border-(--gold-soft) bg-(--bg-surface) p-4">
       <div className="grid gap-3 md:grid-cols-4">
         <div className="md:col-span-2">
-          <label className="text-xs font-medium text-zinc-600">Keyword</label>
+          <label className="text-xs font-medium text-(--text-muted)">
+            Keyword
+          </label>
           <input
             value={props.keyword}
             onChange={(e) => props.setKeyword(e.target.value)}
             placeholder="Search by stallion name or owner"
-            className="mt-1 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm outline-none ring-0 focus:border-zinc-400"
+            className="mt-1 w-full rounded-md border border-(--gold-soft) bg-(--bg-main) px-3 py-2 text-sm text-white outline-none focus:border-(--gold)"
           />
         </div>
 
         <div>
-          <label className="text-xs font-medium text-zinc-600">Country</label>
+          <label className="text-xs font-medium text-(--text-muted)">
+            Country
+          </label>
           <select
             value={props.country}
             onChange={(e) => props.setCountry(e.target.value)}
-            className="mt-1 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-400"
+            className="mt-1 w-full rounded-md border border-(--gold-soft) bg-(--bg-main) px-3 py-2 text-sm text-white outline-none focus:border-(--gold)"
           >
             <option>All</option>
             <option>United States</option>
@@ -44,7 +48,7 @@ export default function StallionDirectoryFilters(props: {
         </div>
 
         <div>
-          <label className="text-xs font-medium text-zinc-600">
+          <label className="text-xs font-medium text-(--text-muted)">
             Semen availability
           </label>
           <select
@@ -52,7 +56,7 @@ export default function StallionDirectoryFilters(props: {
             onChange={(e) =>
               props.setAvailability(e.target.value as SemenAvailability | "All")
             }
-            className="mt-1 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-400"
+            className="mt-1 w-full rounded-md border border-(--gold-soft) bg-(--bg-main) px-3 py-2 text-sm text-white outline-none focus:border-(--gold)"
           >
             <option value="All">All</option>
             <option value="Fresh">Fresh</option>
@@ -65,13 +69,15 @@ export default function StallionDirectoryFilters(props: {
 
       <div className="mt-3 grid gap-3 md:grid-cols-4">
         <div>
-          <label className="text-xs font-medium text-zinc-600">Breed</label>
+          <label className="text-xs font-medium text-(--text-muted)">
+            Breed
+          </label>
           <select
             value={props.breed}
             onChange={(e) =>
               props.setBreed(e.target.value as StallionBreed | "All")
             }
-            className="mt-1 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-400"
+            className="mt-1 w-full rounded-md border border-(--gold-soft) bg-(--bg-main) px-3 py-2 text-sm text-white outline-none focus:border-(--gold)"
           >
             <option value="All">All</option>
             <option value="Quarter Horse">Quarter Horse</option>
@@ -83,7 +89,7 @@ export default function StallionDirectoryFilters(props: {
         <div className="md:col-span-3 flex items-end justify-end">
           <button
             onClick={props.onReset}
-            className="rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
+            className="rounded-md border border-(--gold) px-3 py-2 text-sm font-medium text-(--gold) hover:bg-(--gold)/10"
           >
             Reset
           </button>

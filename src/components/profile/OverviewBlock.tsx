@@ -7,7 +7,7 @@ export default function OverviewBlock({ stallion }: { stallion: Stallion }) {
       title="Overview"
       subtitle="Owner-submitted content. Presented for reference only."
     >
-      <p className="text-sm leading-6 text-zinc-700">
+      <p className="text-sm leading-6 text-zinc-400">
         {stallion.overview || "No overview provided."}
       </p>
     </Section>

@@ -4,9 +4,9 @@ import { formatCurrency } from "../../lib/utils";
 
 function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-4">
-      <p className="text-xs font-medium text-zinc-500">{label}</p>
-      <p className="mt-1 text-sm font-semibold text-zinc-900">{value}</p>
+    <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4 shadow-sm shadow-black/30">
+      <p className="text-xs font-medium text-zinc-400">{label}</p>
+      <p className="mt-1 text-sm font-semibold text-zinc-100">{value}</p>
     </div>
   );
 }
@@ -20,7 +20,7 @@ export default function BreedingStats({ stallion }: { stallion: Stallion }) {
       subtitle="Aggregated from available records and owner-submitted data where provided."
     >
       {!s ? (
-        <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700">
+        <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4 text-sm text-zinc-500">
           No statistics available.
         </div>
       ) : (
@@ -33,7 +33,10 @@ export default function BreedingStats({ stallion }: { stallion: Stallion }) {
             label="Total reported earnings"
             value={
               s.totalReportedEarnings
-                ? formatCurrency(s.totalReportedEarnings.value, s.totalReportedEarnings.currency)
+                ? formatCurrency(
+                    s.totalReportedEarnings.value,
+                    s.totalReportedEarnings.currency
+                  )
                 : "—"
             }
           />
@@ -41,7 +44,10 @@ export default function BreedingStats({ stallion }: { stallion: Stallion }) {
             label="Average earnings per starter"
             value={
               s.averageEarningsPerStarter
-                ? formatCurrency(s.averageEarningsPerStarter.value, s.averageEarningsPerStarter.currency)
+                ? formatCurrency(
+                    s.averageEarningsPerStarter.value,
+                    s.averageEarningsPerStarter.currency
+                  )
                 : "—"
             }
           />

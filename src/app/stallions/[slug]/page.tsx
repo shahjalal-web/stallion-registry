@@ -28,8 +28,11 @@ export default async function StallionProfilePage({
       <SubscriptionLockNotice stallion={stallion} />
       <ProfileHeader stallion={stallion} />
       <OverviewBlock stallion={stallion} />
+      <hr className="border-t border-(--gold-soft)" />
       <BreedingDetails stallion={stallion} />
+      <hr className="border-t border-(--gold-soft)" />
       <PedigreeBlock stallion={stallion} />
+      <hr className="border-t border-(--gold-soft)" />
       <PerformanceTable stallion={stallion} />
       <BreedingStats stallion={stallion} />
       <NotableProgeny stallion={stallion} />

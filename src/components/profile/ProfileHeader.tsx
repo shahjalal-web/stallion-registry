@@ -1,23 +1,23 @@
+/* eslint-disable @next/next/no-img-element */
 import type { Stallion } from "@/types/stallion";
 import { formatHeight } from "../../lib/utils";
 import FoundingBadge from "./FoundingBadge";
 
 function Label({ children }: { children: React.ReactNode }) {
-  return <p className="text-[11px] font-medium text-zinc-500">{children}</p>;
+  return <p className="text-[11px] font-medium text-zinc-400">{children}</p>;
 }
 function Value({ children }: { children: React.ReactNode }) {
-  return <p className="text-sm text-zinc-900">{children}</p>;
+  return <p className="text-sm text-zinc-100">{children}</p>;
 }
 
 export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
   const owner = stallion.owners?.[0];
 
   return (
-    <section className="rounded-xl border border-zinc-200 bg-white p-6">
+    <section className="rounded-xl border border-zinc-800 bg-zinc-950 p-6 shadow-lg shadow-black/30">
       <div className="grid gap-6 md:grid-cols-[240px_1fr]">
         <div className="space-y-3">
-          <div className="aspect-4/5 overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+          <div className="aspect-4/5 overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900">
             <img
               src={
                 stallion.media?.primaryImageUrl ||
@@ -36,7 +36,7 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
                   ? "Subscription required"
                   : "Save to favourites"
               }
-              className="rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-800 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-300 transition hover:border-[#D4AF37] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               Save to favourites
             </button>
@@ -47,10 +47,10 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
 
         <div className="space-y-4">
           <div className="space-y-1">
-            <h1 className="text-2xl font-semibold tracking-tight">
+            <h1 className="text-2xl font-semibold tracking-tight text-white">
               {stallion.registeredName}
             </h1>
-            <p className="text-sm text-zinc-600">
+            <p className="text-sm text-zinc-400">
               Breed: {stallion.breed} · Discipline focus:{" "}
               {stallion.disciplineFocus?.length
                 ? stallion.disciplineFocus.join(" · ")
@@ -58,7 +58,7 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
             </p>
           </div>
 
-          <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+          <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <Label>Year of birth</Label>
@@ -82,8 +82,8 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-lg border border-zinc-200 p-4">
-              <p className="text-sm font-semibold">Owner</p>
+            <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
+              <p className="text-sm font-semibold text-white">Owner</p>
               <div className="mt-3 space-y-2">
                 <div>
                   <Label>Name</Label>
@@ -98,27 +98,27 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
                   <Value>{owner?.phone || "—"}</Value>
                 </div>
                 <div className="flex flex-col gap-1 text-sm">
-                  {owner?.website ? (
-                    <a className="text-zinc-800 hover:underline" href={owner.website} target="_blank">
+                  {owner?.website && (
+                    <a className="text-[#D4AF37] hover:underline" href={owner.website} target="_blank">
                       Farm / ranch website
                     </a>
-                  ) : null}
-                  {owner?.facebook ? (
-                    <a className="text-zinc-800 hover:underline" href={owner.facebook} target="_blank">
+                  )}
+                  {owner?.facebook && (
+                    <a className="text-[#D4AF37] hover:underline" href={owner.facebook} target="_blank">
                       Facebook
                     </a>
-                  ) : null}
-                  {owner?.instagram ? (
-                    <a className="text-zinc-800 hover:underline" href={owner.instagram} target="_blank">
+                  )}
+                  {owner?.instagram && (
+                    <a className="text-[#D4AF37] hover:underline" href={owner.instagram} target="_blank">
                       Instagram
                     </a>
-                  ) : null}
+                  )}
                 </div>
               </div>
             </div>
 
-            <div className="rounded-lg border border-zinc-200 p-4">
-              <p className="text-sm font-semibold">Registry Record</p>
+            <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
+              <p className="text-sm font-semibold text-white">Registry Record</p>
               <div className="mt-3 space-y-2">
                 <div>
                   <Label>Registry association</Label>
@@ -139,7 +139,7 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
                       <a
                         href={stallion.officialRegistryLink}
                         target="_blank"
-                        className="text-zinc-800 hover:underline"
+                        className="text-[#D4AF37] hover:underline"
                       >
                         View official record
                       </a>
@@ -151,16 +151,16 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
               </div>
             </div>
 
-            <div className="rounded-lg border border-zinc-200 p-4">
-              <p className="text-sm font-semibold">Disease testing results</p>
-              <p className="mt-2 text-sm text-zinc-700">
+            <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
+              <p className="text-sm font-semibold text-white">Disease testing results</p>
+              <p className="mt-2 text-sm text-zinc-300">
                 {stallion.diseaseTestingResults || "—"}
               </p>
             </div>
 
-            <div className="rounded-lg border border-zinc-200 p-4">
-              <p className="text-sm font-semibold">Colour testing results</p>
-              <p className="mt-2 text-sm text-zinc-700">
+            <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
+              <p className="text-sm font-semibold text-white">Colour testing results</p>
+              <p className="mt-2 text-sm text-zinc-300">
                 {stallion.colourTestingResults || "—"}
               </p>
             </div>

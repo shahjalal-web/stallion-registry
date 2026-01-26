@@ -10,7 +10,7 @@ export default function NotableProgeny({ stallion }: { stallion: Stallion }) {
       subtitle="Evidence-based. Presented in a factual format with references where possible."
     >
       {list.length === 0 ? (
-        <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700">
+        <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4 text-sm text-zinc-500">
           No notable progeny listed.
         </div>
       ) : (
@@ -18,10 +18,11 @@ export default function NotableProgeny({ stallion }: { stallion: Stallion }) {
           {list.map((p, idx) => (
             <div
               key={idx}
-              className="rounded-lg border border-zinc-200 bg-white p-4"
+              className="rounded-lg border border-zinc-800 bg-zinc-950 p-4 shadow-sm shadow-black/30"
             >
-              <p className="text-sm font-semibold text-zinc-900">{p.name}</p>
-              <p className="mt-1 text-sm text-zinc-700">
+              <p className="text-sm font-semibold text-zinc-100">{p.name}</p>
+
+              <p className="mt-1 text-sm text-zinc-400">
                 {[
                   p.year ? String(p.year) : null,
                   p.association,
@@ -30,13 +31,15 @@ export default function NotableProgeny({ stallion }: { stallion: Stallion }) {
                   .filter(Boolean)
                   .join(" · ") || "—"}
               </p>
-              <p className="mt-2 text-sm text-zinc-800">{p.result}</p>
+
+              <p className="mt-2 text-sm text-zinc-300">{p.result}</p>
+
               <p className="mt-2 text-sm">
                 {p.reference?.href ? (
                   <a
                     href={p.reference.href}
                     target="_blank"
-                    className="text-zinc-800 hover:underline"
+                    className="text-[#D4AF37] hover:underline"
                   >
                     {p.reference.label || "Reference"}
                   </a>

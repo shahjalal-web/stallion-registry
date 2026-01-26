@@ -21,7 +21,7 @@ export default function VideoReferences({ stallion }: { stallion: Stallion }) {
       subtitle="Informational footage only. Availability varies by record and season."
     >
       {vids.length === 0 ? (
-        <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700">
+        <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-400">
           No video references provided.
         </div>
       ) : (
@@ -55,7 +55,7 @@ export default function VideoReferences({ stallion }: { stallion: Stallion }) {
                   <a
                     href={v.url}
                     target="_blank"
-                    className="mt-1 inline-block text-sm text-zinc-800 hover:underline"
+                    className="mt-1 inline-block text-sm text-zinc-400 hover:underline"
                   >
                     Open link
                   </a>
