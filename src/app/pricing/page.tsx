@@ -15,7 +15,7 @@ export default function PricingPage() {
 
         {/* STALLION LISTINGS */}
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-[#D4AF37]">
+          <h2 className="text-lg font-semibold text-[#b08d57]">
             Stallion Listings
           </h2>
 
@@ -43,7 +43,7 @@ export default function PricingPage() {
 
         {/* PEDIGREE ONLY */}
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-[#D4AF37]">
+          <h2 className="text-lg font-semibold text-[#b08d57]">
             Pedigree-Only & Historical Listings
           </h2>
 
@@ -66,7 +66,7 @@ export default function PricingPage() {
 
         {/* INTERNATIONAL */}
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-[#D4AF37]">
+          <h2 className="text-lg font-semibold text-[#b08d57]">
             International Listings & Currency
           </h2>
 
@@ -85,7 +85,7 @@ export default function PricingPage() {
 
         {/* IMPORTANT NOTES */}
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-[#D4AF37]">
+          <h2 className="text-lg font-semibold text-[#b08d57]">
             Important Notes
           </h2>
 

@@ -54,7 +54,7 @@ export default function StallionDirectoryPage() {
         </p> */}
       </header>
 
-      <hr className="border-t border-(--gold-soft)" />
+      <hr className="border-t border-(--gold)" />
 
       <StallionDirectoryFilters
         keyword={keyword}
@@ -73,7 +73,7 @@ export default function StallionDirectoryPage() {
         }}
       />
 
-      <section className="overflow-hidden rounded-lg border border-(--gold-soft)">
+      <section className="overflow-hidden rounded-lg border border-(--gold)">
         <div className="w-full overflow-x-auto">
           <table className="min-w-225 w-full border-collapse text-sm">
             <thead className="bg-(--bg-surface) text-(--gold)">
@@ -90,7 +90,7 @@ export default function StallionDirectoryPage() {
               {filtered.map((s) => (
                 <tr
                   key={s.id}
-                  className="border-t border-(--gold-soft) hover:bg-(--bg-surface)"
+                  className="border-t border-(--gold) hover:bg-(--bg-surface)"
                 >
                   <td className="px-4 py-3">
                     <Link href={`/stallions/${s.slug}`}>
@@ -111,12 +111,15 @@ export default function StallionDirectoryPage() {
                   </td>
 
                   <td className="px-4 py-3 text-(--text-muted)">
-                    {s.pedigree.sireName} × {s.pedigree.damName}
+                    {s.pedigree.sire?.name || "—"} ×{" "}
+                    {s.pedigree.dam?.name || "—"}
                   </td>
 
                   <td className="px-4 py-3">{s.breed}</td>
 
-                  <td className="px-4 py-3 text-center">{s.countryOfStanding}</td>
+                  <td className="px-4 py-3 text-center">
+                    {s.countryOfStanding}
+                  </td>
                 </tr>
               ))}
             </tbody>

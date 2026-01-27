@@ -16,7 +16,7 @@ export default function StallionDirectoryFilters(props: {
   onReset: () => void;
 }) {
   return (
-    <div className="rounded-xl border border-(--gold-soft) bg-(--bg-surface) p-4">
+    <div className="rounded-xl border border-(--gold) bg-(--bg-surface) p-4">
       <div className="grid gap-3 md:grid-cols-4">
         <div className="md:col-span-2">
           <label className="text-xs font-medium text-(--text-muted)">

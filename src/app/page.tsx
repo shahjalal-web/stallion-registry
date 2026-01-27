@@ -21,14 +21,14 @@ export default function HomePage() {
         <div className="flex flex-wrap gap-3 pt-3">
           <Link
             href="/stallions"
-            className="rounded-md border border-[#D4AF37] px-4 py-2 text-sm font-medium text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed"
+            className="rounded-md border border-[#b08d57] px-4 py-2 text-sm font-medium text-[#b08d57] transition hover:bg-[#b08d57] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Browse Stallion Directory
           </Link>
 
           <Link
             href="/about"
-            className="rounded-md border border-[#D4AF37] px-4 py-2 text-sm font-medium text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed"
+            className="rounded-md border border-[#b08d57] px-4 py-2 text-sm font-medium text-[#b08d57] transition hover:bg-[#b08d57] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed"
           >
             About the Registry
           </Link>

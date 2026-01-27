@@ -42,15 +42,15 @@ export default function Navbar() {
         {/* Desktop nav */}
         <nav className="hidden items-center gap-6 sm:flex text-sm">
 
-          <Link href="/" className={isActive("/") ? "text-[#D4AF37] border-b border-[#D4AF37] pb-1" : "text-zinc-400 hover:text-white"}>
+          <Link href="/" className={isActive("/") ? "text-[#b08d57] border-b border-[#b08d57] pb-1" : "text-zinc-400 hover:text-white"}>
             Registry
           </Link>
 
-          <Link href="/stallions" className={isActive("/stallions") ? "text-[#D4AF37] border-b border-[#D4AF37] pb-1" : "text-zinc-400 hover:text-white"}>
+          <Link href="/stallions" className={isActive("/stallions") ? "text-[#b08d57] border-b border-[#b08d57] pb-1" : "text-zinc-400 hover:text-white"}>
             Stallion Directory
           </Link>
 
-          <Link href="/pricing" className={isActive("/pricing") ? "text-[#D4AF37] border-b border-[#D4AF37] pb-1" : "text-zinc-400 hover:text-white"}>
+          <Link href="/pricing" className={isActive("/pricing") ? "text-[#b08d57] border-b border-[#b08d57] pb-1" : "text-zinc-400 hover:text-white"}>
             Pricing
           </Link>
 
@@ -60,7 +60,7 @@ export default function Navbar() {
               onClick={() => setResourcesOpen((v) => !v)}
               className={`flex items-center gap-1 ${
                 pathname.startsWith("/resources")
-                  ? "text-[#D4AF37]"
+                  ? "text-[#b08d57]"
                   : "text-zinc-400 hover:text-white"
               }`}
             >
@@ -85,11 +85,11 @@ export default function Navbar() {
             )}
           </div>
 
-          <Link href="/submit-stallion" className={isActive("/submit-stallion") ? "text-[#D4AF37] border-b border-[#D4AF37] pb-1" : "text-zinc-400 hover:text-white"}>
+          <Link href="/submit-stallion" className={isActive("/submit-stallion") ? "text-[#b08d57] border-b border-[#b08d57] pb-1" : "text-zinc-400 hover:text-white"}>
             Submit Stallion
           </Link>
 
-          <Link href="/about" className={isActive("/about") ? "text-[#D4AF37] border-b border-[#D4AF37] pb-1" : "text-zinc-400 hover:text-white"}>
+          <Link href="/about" className={isActive("/about") ? "text-[#b08d57] border-b border-[#b08d57] pb-1" : "text-zinc-400 hover:text-white"}>
             About
           </Link>
         </nav>
@@ -97,7 +97,7 @@ export default function Navbar() {
         {/* Mobile button */}
         <button
           onClick={() => setOpen((v) => !v)}
-          className="sm:hidden rounded-md border border-zinc-700 bg-zinc-900 p-2 text-zinc-300 hover:border-[#D4AF37] hover:text-white"
+          className="sm:hidden rounded-md border border-zinc-700 bg-zinc-900 p-2 text-zinc-300 hover:border-[#b08d57] hover:text-white"
         >
           {open ? "✕" : "☰"}
         </button>

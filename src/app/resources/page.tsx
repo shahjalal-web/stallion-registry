@@ -24,7 +24,7 @@ export default function ResourcesDirectoryPage() {
               <td className="px-4 py-3">Example Equine Imports</td>
               <td className="px-4 py-3">Sport Horses</td>
               <td className="px-4 py-3">
-                <a href="#" className="text-[#D4AF37] hover:underline">Website</a>
+                <a href="#" className="text-[#b08d57] hover:underline">Website</a>
               </td>
               <td className="px-4 py-3">Commercial importer</td>
             </tr>

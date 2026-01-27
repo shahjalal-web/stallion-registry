@@ -4,9 +4,10 @@ export const stallions: Stallion[] = [
   {
     id: "ST-0001",
     slug: "obsidian-knight",
+    status: "Standing", // রিকোয়ারমেন্ট ৬: প্রথম ব্লকের স্ট্যাটাস
     registeredName: "Obsidian Knight",
     breed: "Quarter Horse",
-    countryOfStanding: "United States",
+    countryOfStanding: "United States", // রিকোয়ারমেন্ট ৪: প্রথম ব্লকের কান্ট্রি
     yearOfBirth: 2016,
     registryAssociation: "AQHA",
     officialRegistryLink: "https://example-registry.org/aqha/1234567",
@@ -31,53 +32,76 @@ export const stallions: Stallion[] = [
     ],
 
     overview:
-      "Obsidian Knight is presented as a verified registry record with emphasis on structured reference information. The stallion is listed with a focus on Western performance disciplines and includes pedigree, breeding availability, testing summaries and published records where available.",
+      "Obsidian Knight is presented as a verified registry record with emphasis on structured reference information...",
 
     breedingAvailability: "Frozen",
     breedingManagerName: "Breeding Office — Blackstone Performance",
     breedingServiceProvider: "North Florida Equine Repro",
     breedingServiceProviderUrl: "https://equine-repro.example/provider/nfl",
-    studFee: { value: 1750, currency: "USD" },
+    studFee: { value: 1750, currency: "USD" }, // রিকোয়ারমেন্ট ১: নির্দিষ্ট কান্ট্রি কোড
     additionalBreedingNotes:
-      "Frozen semen stored and distributed via breeding service provider. Transport/courier fees and veterinary costs vary by region and are not included in the listed stud fee.",
+      "Frozen semen stored and distributed via breeding service provider. Transport/courier fees and veterinary costs vary by region.",
     countryAvailability: ["United States", "Canada"],
     breedingGuarantees: "LFG",
 
     diseaseTestingResults:
-      "Panel testing reported: 6-panel (N/N) — documentation on request (sample entry).",
+      "Panel testing reported: 6-panel (N/N) — documentation on request.",
     colourTestingResults:
-      "Colour testing reported: E/E, a/a — consistent black phenotype (sample entry).",
+      "Colour testing reported: E/E, a/a — consistent black phenotype.",
 
     pedigree: {
-      sireName: "Midnight Resolve",
-      damName: "Velvet Horizon",
-      grandsireSireLine: "Invitation Only",
-      granddamSireLine: "Zippos Mr Good Bar",
-      grandsireDamLine: "A Good Machine",
-      granddamDamLine: "Blazing Hot",
+      // রিকোয়ারমেন্ট ২: নেস্টেড অবজেক্ট (গভীর জেনারেশন সাপোর্ট করার জন্য)
+      sire: {
+        name: "Midnight Resolve",
+        sire: { name: "Invitation Only" },
+        dam: { name: "Zippos Mr Good Bar" },
+      },
+      dam: {
+        name: "Velvet Horizon",
+        sire: { name: "A Good Machine" },
+        dam: { name: "Blazing Hot" },
+      },
+
+      extended: [
+    { label: "Sire’s grandsire", name: "Potential Investment" },
+    { label: "Sire’s granddam", name: "Hot Chocolate Chip" },
+    { label: "Dam’s grandsire", name: "Smart Little Lena" },
+    { label: "Dam’s granddam", name: "Docs Stylish Oak" },
+    { label: "Great grandsire (dam line)", name: "Doc Bar" },
+  ],
     },
 
     performanceRecords: [
+      // রিকোয়ারমেন্ট ৫: আনলিমিটেড লিস্ট
       {
         year: 2023,
         event: "AQHA Level 1 Championship",
         discipline: "Senior Western Pleasure",
         result: "Top 10",
-        reference: { label: "Published results", href: "https://show-results.example/a2023" },
+        reference: {
+          label: "Published results",
+          href: "https://show-results.example/a2023",
+        },
       },
       {
         year: 2022,
         event: "NSBA World Championship Show",
         discipline: "Western Pleasure",
         result: "Finalist",
-        reference: { label: "Published results", href: "https://show-results.example/n2022" },
+        reference: {
+          label: "Published results",
+          href: "https://show-results.example/n2022",
+        },
       },
       {
         year: 2021,
         event: "The Championship Show",
         discipline: "Trail",
         result: "Reserve Champion",
-        reference: { label: "Published results", href: "https://show-results.example/t2021" },
+        reference: {
+          label: "Published results",
+          href: "https://show-results.example/t2021",
+        },
       },
     ],
 
@@ -91,13 +115,17 @@ export const stallions: Stallion[] = [
     },
 
     notableProgeny: [
+      // রিকোয়ারমেন্ট ৩: আনলিমিটেড লিস্ট
       {
         name: "Obsidian Affair",
         year: 2022,
         association: "AQHA",
         discipline: "Western Pleasure",
         result: "Level 1 Champion (2YO)",
-        reference: { label: "Reference", href: "https://progeny.example/obsidian-affair" },
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/obsidian-affair",
+        },
       },
       {
         name: "Knight Moves",
@@ -105,19 +133,25 @@ export const stallions: Stallion[] = [
         association: "NSBA",
         discipline: "Trail",
         result: "Top 5 — NSBA Futurity",
-        reference: { label: "Reference", href: "https://progeny.example/knight-moves" },
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/knight-moves",
+        },
       },
       {
         name: "Midnight Sonata",
         association: "AQHA",
         discipline: "Ranch Riding",
         result: "Multiple circuit awards (sample)",
-        reference: { label: "Reference", href: "https://progeny.example/midnight-sonata" },
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/midnight-sonata",
+        },
       },
     ],
 
     disciplineCoverageDescription:
-      "Recorded disciplines reflect published association participation and owner-submitted documentation. Listings are intended for reference and comparison; they do not constitute endorsement or ranking.",
+      "Recorded disciplines reflect published association participation.",
 
     media: {
       primaryImageUrl:
@@ -151,6 +185,7 @@ export const stallions: Stallion[] = [
   {
     id: "ST-0002",
     slug: "southern-gunmetal",
+    status: "Standing",
     registeredName: "Southern Gunmetal",
     breed: "Paint",
     countryOfStanding: "Australia",
@@ -178,30 +213,31 @@ export const stallions: Stallion[] = [
     ],
 
     overview:
-      "Southern Gunmetal is listed as a multi-discipline Paint stallion with emphasis on Ranch and HUS coverage. Registry entry is presented for factual comparison across regions; competition outcomes may vary by season and association.",
+      "Southern Gunmetal is listed as a multi-discipline Paint stallion...",
 
     breedingAvailability: "Chilled",
     breedingManagerName: "Stud Office — Rivergum",
     breedingServiceProvider: "Queensland Equine Reproduction",
     breedingServiceProviderUrl: "https://equine-repro.example/provider/qld",
-    studFee: { value: 1650, currency: "USD" },
-    additionalBreedingNotes:
-      "Chilled semen availability within Australia. New Zealand export subject to seasonal approval and courier scheduling.",
+    studFee: { value: 1650, currency: "AUD" }, // রিকোয়ারমেন্ট ১: AUD নির্দিষ্ট করা হলো
+    additionalBreedingNotes: "Chilled semen availability within Australia.",
     countryAvailability: ["Australia", "New Zealand"],
     breedingGuarantees: "None",
 
-    diseaseTestingResults:
-      "Testing summary: reported panel tests clear (sample entry).",
-    colourTestingResults:
-      "Colour testing reported: Roan + Tobiano (sample entry).",
+    diseaseTestingResults: "Testing summary: reported panel tests clear.",
+    colourTestingResults: "Colour testing reported: Roan + Tobiano.",
 
     pedigree: {
-      sireName: "Metallic Traveller",
-      damName: "Southern Lullaby",
-      grandsireSireLine: "Gunner",
-      granddamSireLine: "Smart Little Lena",
-      grandsireDamLine: "Zippos Sensation",
-      granddamDamLine: "Zips Chocolate Chip",
+      sire: {
+        name: "Metallic Traveller",
+        sire: { name: "Gunner" },
+        dam: { name: "Smart Little Lena" },
+      },
+      dam: {
+        name: "Southern Lullaby",
+        sire: { name: "Zippos Sensation" },
+        dam: { name: "Zips Chocolate Chip" },
+      },
     },
 
     performanceRecords: [
@@ -210,14 +246,20 @@ export const stallions: Stallion[] = [
         event: "Australian Paint Horse Nationals",
         discipline: "Hunter Under Saddle",
         result: "Champion",
-        reference: { label: "Published results", href: "https://show-results.example/apha2022" },
+        reference: {
+          label: "Published results",
+          href: "https://show-results.example/apha2022",
+        },
       },
       {
         year: 2021,
         event: "State Championships",
         discipline: "Ranch Rail",
         result: "Reserve Champion",
-        reference: { label: "Published results", href: "https://show-results.example/state2021" },
+        reference: {
+          label: "Published results",
+          href: "https://show-results.example/state2021",
+        },
       },
     ],
 
@@ -226,8 +268,8 @@ export const stallions: Stallion[] = [
       totalRegisteredProgeny: 63,
       progenyStartedInCompetition: 31,
       performanceEarners: 19,
-      totalReportedEarnings: { value: 128000, currency: "USD" },
-      averageEarningsPerStarter: { value: 4129, currency: "USD" },
+      totalReportedEarnings: { value: 128000, currency: "AUD" },
+      averageEarningsPerStarter: { value: 4129, currency: "AUD" },
     },
 
     notableProgeny: [
@@ -237,19 +279,25 @@ export const stallions: Stallion[] = [
         association: "APHA",
         discipline: "Hunter Under Saddle",
         result: "National finalist (sample)",
-        reference: { label: "Reference", href: "https://progeny.example/gunmetal-rose" },
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/gunmetal-rose",
+        },
       },
       {
         name: "Southern Rail",
         association: "APHA",
         discipline: "Ranch Rail",
         result: "Circuit champion (sample)",
-        reference: { label: "Reference", href: "https://progeny.example/southern-rail" },
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/southern-rail",
+        },
       },
     ],
 
     disciplineCoverageDescription:
-      "Disciplines reflect documented participation. Registry listings aim to support breeders in comparing sire profiles, pedigree patterns and discipline coverage in a consistent format.",
+      "Disciplines reflect documented participation.",
 
     media: {
       primaryImageUrl:
@@ -279,6 +327,7 @@ export const stallions: Stallion[] = [
   {
     id: "ST-0003",
     slug: "iron-creek-legacy",
+    status: "Not Standing", // স্যাম্পল স্ট্যাটাস
     registeredName: "Iron Creek Legacy",
     breed: "Appaloosa",
     countryOfStanding: "United Kingdom",
@@ -302,16 +351,14 @@ export const stallions: Stallion[] = [
       },
     ],
 
-    overview:
-      "Iron Creek Legacy is presented as a pending record with core identity and pedigree information supplied. Verification may be updated following submission of association documents.",
+    overview: "Iron Creek Legacy is presented as a pending record...",
 
     breedingAvailability: "Frozen",
     breedingManagerName: "Stud Coordinator — Iron Creek",
     breedingServiceProvider: "European Equine Transport & Storage",
     breedingServiceProviderUrl: "https://equine-repro.example/provider/eu",
-    studFee: { value: 1400, currency: "USD" },
-    additionalBreedingNotes:
-      "Frozen semen storage in EU facility. Shipping timelines depend on export documentation and courier schedules.",
+    studFee: { value: 1400, currency: "GBP" },
+    additionalBreedingNotes: "Frozen semen storage in EU facility.",
     countryAvailability: ["United Kingdom", "EU"],
     breedingGuarantees: "None",
 
@@ -319,12 +366,16 @@ export const stallions: Stallion[] = [
     colourTestingResults: "Not listed.",
 
     pedigree: {
-      sireName: "Legacy In Motion",
-      damName: "Creekside Jewel",
-      grandsireSireLine: "Zippos Mr Good Bar",
-      granddamSireLine: "Invitation Only",
-      grandsireDamLine: "Smart Chic Olena",
-      granddamDamLine: "Gunner",
+      sire: {
+        name: "Legacy In Motion",
+        sire: { name: "Zippos Mr Good Bar" },
+        dam: { name: "Invitation Only" },
+      },
+      dam: {
+        name: "Creekside Jewel",
+        sire: { name: "Smart Chic Olena" },
+        dam: { name: "Gunner" },
+      },
     },
 
     performanceRecords: [
@@ -333,7 +384,10 @@ export const stallions: Stallion[] = [
         event: "Regional Championships",
         discipline: "Trail",
         result: "Champion (sample)",
-        reference: { label: "Reference", href: "https://show-results.example/uk2020" },
+        reference: {
+          label: "Reference",
+          href: "https://show-results.example/uk2020",
+        },
       },
     ],
 
@@ -342,13 +396,12 @@ export const stallions: Stallion[] = [
       totalRegisteredProgeny: 41,
       progenyStartedInCompetition: 17,
       performanceEarners: 9,
-      totalReportedEarnings: { value: 54000, currency: "USD" },
-      averageEarningsPerStarter: { value: 3176, currency: "USD" },
+      totalReportedEarnings: { value: 54000, currency: "GBP" },
+      averageEarningsPerStarter: { value: 3176, currency: "GBP" },
     },
 
     notableProgeny: [],
-    disciplineCoverageDescription:
-      "Listed as an all-round sire candidate. Discipline references may expand following record verification and additional owner submissions.",
+    disciplineCoverageDescription: "Listed as an all-round sire candidate.",
 
     media: {
       primaryImageUrl:

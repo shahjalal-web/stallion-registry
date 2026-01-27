@@ -28,7 +28,7 @@ export default function BreedingDetails({ stallion }: { stallion: Stallion }) {
               label="Stud fee (reference)"
               value={
                 stallion.studFee
-                  ? `${formatCurrency(stallion.studFee.value, stallion.studFee.currency)} AUD/USD/EUR`
+                  ? `${formatCurrency(stallion.studFee.value, stallion.studFee.currency)} ${stallion.studFee.currency}`
                   : "—"
               }
             />

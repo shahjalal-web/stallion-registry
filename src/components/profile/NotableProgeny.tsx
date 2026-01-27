@@ -6,45 +6,38 @@ import Section from "./Section";
 
 export default function NotableProgeny({ stallion }: { stallion: Stallion }) {
   const progeny = stallion.notableProgeny || [];
-  const [showAll, setShowAll] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
-  if (progeny.length === 0) return null;
+  if (!progeny.length) return null;
 
-  const visible = showAll ? progeny : progeny.slice(0, 3);
-  const hasMore = progeny.length > 3;
+  const visible = expanded ? progeny : progeny.slice(0, 3);
 
   return (
     <Section
       title="Notable Progeny"
-      subtitle="Representative progeny results. Inclusion does not imply ranking or endorsement."
+      subtitle="Representative progeny achievements. Inclusion does not imply ranking."
     >
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {visible.map((p, idx) => (
+        {visible.map((p, i) => (
           <div
-            key={idx}
-            className="rounded-lg border border-zinc-800 bg-zinc-950 p-4 transition hover:border-[#B08D57]"
+            key={i}
+            className="rounded-lg border border-zinc-800 bg-zinc-950 p-4"
           >
-            {/* Name */}
             <p className="text-sm font-semibold text-white">{p.name}</p>
 
-            {/* Meta */}
-            <div className="mt-2 text-xs text-zinc-400 space-y-1">
+            <div className="mt-1 space-y-1 text-xs text-zinc-400">
               {p.year && <p>Year: {p.year}</p>}
               {p.association && <p>Association: {p.association}</p>}
               {p.discipline && <p>Discipline: {p.discipline}</p>}
             </div>
 
-            {/* Result */}
-            <p className="mt-3 text-sm font-medium text-[#B08D57]">
-              {p.result}
-            </p>
+            <p className="mt-2 text-sm text-[#B08D57]">{p.result}</p>
 
-            {/* Reference */}
             {p.reference?.href && (
               <a
                 href={p.reference.href}
                 target="_blank"
-                className="mt-2 inline-block text-xs text-zinc-400 hover:text-[#B08D57] hover:underline"
+                className="mt-2 inline-block text-xs text-[#B08D57] hover:underline"
               >
                 {p.reference.label || "Reference"}
               </a>
@@ -53,16 +46,13 @@ export default function NotableProgeny({ stallion }: { stallion: Stallion }) {
         ))}
       </div>
 
-      {/* SHOW MORE SYSTEM */}
-      {hasMore && (
-        <div className="mt-5 text-center">
-          <button
-            onClick={() => setShowAll(!showAll)}
-            className="rounded-md border border-[#B08D57] px-4 py-2 text-sm text-[#B08D57] transition hover:bg-[#B08D57] hover:text-black"
-          >
-            {showAll ? "Show fewer" : `Show all progeny (${progeny.length})`}
-          </button>
-        </div>
+      {progeny.length > 3 && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="mt-5 text-sm text-[#B08D57] hover:underline"
+        >
+          {expanded ? "Show fewer" : `Show ${progeny.length - 3} more`}
+        </button>
       )}
     </Section>
   );

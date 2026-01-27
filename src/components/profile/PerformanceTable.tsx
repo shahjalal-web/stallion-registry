@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import type { PerformanceEntry } from "@/types/stallion";
 
@@ -14,8 +15,12 @@ export default function PerformanceSection({
   return (
     <section className="rounded-xl border border-zinc-800 bg-zinc-950 p-6 shadow-lg shadow-black/30">
       <h2 className="text-sm font-semibold text-white">Performance Record</h2>
+      <p className="mt-1 text-xs text-zinc-400">
+        Recorded competition entries. Listings are factual references and may
+        not represent a complete competition history.
+      </p>
 
-      <div className="mt-4 space-y-3">
+      <div className="mt-5 space-y-3">
         {records.map((rec, i) => {
           const open = openIndex === i;
 
@@ -38,12 +43,12 @@ export default function PerformanceSection({
                   </p>
                 </div>
 
-                <span className="text-xs text-[#D4AF37]">
+                <span className="text-xs text-[#B08D57]">
                   {open ? "Hide details" : "View details"}
                 </span>
               </div>
 
-              {/* 🔽 EXPANDED METADATA */}
+              {/* EXPANDED DETAILS */}
               {open && (
                 <div className="mt-4 space-y-2 border-t border-zinc-800 pt-3 text-xs text-zinc-300">
                   {rec.notes && (
@@ -71,7 +76,7 @@ export default function PerformanceSection({
                     <a
                       href={rec.reference.href}
                       target="_blank"
-                      className="text-[#D4AF37] hover:underline"
+                      className="text-[#B08D57] hover:underline"
                     >
                       View official reference
                     </a>

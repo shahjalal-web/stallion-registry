@@ -29,9 +29,8 @@ export type PerformanceEntry = {
   notes?: string;
   judges?: string;
   earnings?: string;
-   levelEarnings?: { value: number; currency: string };
+  levelEarnings?: { value: number; currency: string };
 };
-
 
 export type ProgenyEntry = {
   name: string;
@@ -47,14 +46,30 @@ export type GalleryImage = {
   caption?: string;
 };
 
+export type ProgenyRow = {
+  name: string;
+  year: string;
+  association: string;
+  discipline: string;
+  result: string;
+  reference: string;
+};
+
 export type VideoReference = {
   url: string;
   type?: string;
 };
 
+export type PedigreeNode = {
+  name: string;
+  sire?: PedigreeNode;
+  dam?: PedigreeNode;
+};
+
 export type Stallion = {
   id: string;
   slug: string;
+  status: string;
 
   registeredName: string;
   breed: StallionBreed;
@@ -87,12 +102,20 @@ export type Stallion = {
   colourTestingResults?: string;
 
   pedigree: {
-    sireName: string;
-    damName: string;
+    sire: PedigreeNode;
+    dam: PedigreeNode;
+
+    // 2nd generation
     grandsireSireLine?: string;
     granddamSireLine?: string;
     grandsireDamLine?: string;
     granddamDamLine?: string;
+
+    // 🔥 NEW — unlimited extension support
+    extended?: {
+      label: string; // e.g. "Sire's Grandsire"
+      name: string;
+    }[];
   };
 
   performanceRecords?: PerformanceEntry[];
@@ -116,5 +139,4 @@ export type Stallion = {
 
   isFoundingMember?: boolean;
   hasActiveSubscription?: boolean;
-
 };

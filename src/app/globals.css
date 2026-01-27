@@ -3,11 +3,16 @@
 :root {
   --bg-main: #0b0b0c;
   --bg-surface: #121214;
+
   --text-main: #f4f4f2;
   --text-muted: #a1a1aa;
-  --gold: #b08d57;
-  --gold-soft: #6b5736;
+
+  /* 🔥 NEW LUXURY GOLD SYSTEM */
+  --gold: #b08d57;        /* main muted gold */
+  --gold-light: #d4b679;  /* highlight */
+  --gold-dark: #6b5736;   /* borders / dividers */
 }
+
 
 body {
   background: var(--bg-main);

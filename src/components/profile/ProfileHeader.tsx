@@ -36,7 +36,7 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
           <div className="flex items-center justify-between">
             <button
               disabled={stallion.hasActiveSubscription === false}
-              className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-300 transition hover:border-[#D4AF37] hover:text-white disabled:opacity-60"
+              className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-300 transition hover:border-[#b08d57] hover:text-white disabled:opacity-60"
             >
               Save to favourites
             </button>
@@ -76,38 +76,77 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
 
               <div className="sm:col-span-2">
                 <Label>Parentage</Label>
-                <Value>
-                  {stallion.pedigree.sireName} × {stallion.pedigree.damName}
-                </Value>
+                <div className="text-sm">
+                  <Value>
+                    {stallion.pedigree.sire?.name}
+                    <span className="text-xs text-gray-500">
+                      {" "}
+                      ({stallion.pedigree.sire?.sire?.name} ×{" "}
+                      {stallion.pedigree.sire?.dam?.name})
+                    </span>
+                    <br />
+                    ×
+                    <br />
+                    {stallion.pedigree.dam?.name}
+                    <span className="text-xs text-gray-500">
+                      {" "}
+                      ({stallion.pedigree.dam?.sire?.name} ×{" "}
+                      {stallion.pedigree.dam?.dam?.name})
+                    </span>
+                  </Value>
+                </div>
 
                 {/* 🔽 EXTENDED PEDIGREE TOGGLE */}
                 <button
                   onClick={() => setShowPedigree(!showPedigree)}
-                  className="mt-2 text-xs text-[#D4AF37] hover:underline"
+                  className="mt-2 text-xs text-[#b08d57] hover:underline"
                 >
-                  {showPedigree ? "Hide extended pedigree" : "View extended pedigree"}
+                  {showPedigree
+                    ? "Hide extended pedigree"
+                    : "View extended pedigree"}
                 </button>
 
                 {showPedigree && (
                   <div className="mt-3 grid gap-2 text-xs text-zinc-300 sm:grid-cols-2">
+                    {/* Sire Line - দাদাকুল */}
                     <p>
-                      <span className="text-zinc-500">Grandsire (Sire line): </span>
-                      {stallion.pedigree.grandsireSireLine || "—"}
+                      <span className="text-zinc-500">
+                        Grandsire (Sire line):{" "}
+                      </span>
+                      {stallion.pedigree.sire?.sire?.name || "—"}
                     </p>
                     <p>
-                      <span className="text-zinc-500">Granddam (Sire line): </span>
-                      {stallion.pedigree.granddamSireLine || "—"}
+                      <span className="text-zinc-500">
+                        Granddam (Sire line):{" "}
+                      </span>
+                      {stallion.pedigree.sire?.dam?.name || "—"}
+                    </p>
+
+                    {/* Dam Line - নানাকুল */}
+                    <p>
+                      <span className="text-zinc-500">
+                        Grandsire (Dam line):{" "}
+                      </span>
+                      {stallion.pedigree.dam?.sire?.name || "—"}
                     </p>
                     <p>
-                      <span className="text-zinc-500">Grandsire (Dam line): </span>
-                      {stallion.pedigree.grandsireDamLine || "—"}
-                    </p>
-                    <p>
-                      <span className="text-zinc-500">Granddam (Dam line): </span>
-                      {stallion.pedigree.granddamDamLine || "—"}
+                      <span className="text-zinc-500">
+                        Granddam (Dam line):{" "}
+                      </span>
+                      {stallion.pedigree.dam?.dam?.name || "—"}
                     </p>
                   </div>
                 )}
+              </div>
+
+              <div>
+                <Label>Country</Label>
+                <Value>{stallion.countryOfStanding}</Value>
+              </div>
+
+              <div>
+                <Label>Status</Label>
+                <Value>{stallion.status || "Standing"}</Value>
               </div>
             </div>
           </div>
@@ -120,7 +159,9 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
             </div>
 
             <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
-              <p className="text-sm font-semibold text-white">Registry Record</p>
+              <p className="text-sm font-semibold text-white">
+                Registry Record
+              </p>
               <Value>{stallion.registryAssociation}</Value>
               <Value>{stallion.registrationNumber}</Value>
             </div>

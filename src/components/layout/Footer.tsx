@@ -17,26 +17,26 @@ export default function Footer() {
         <div className="space-y-2">
           <p className="text-white font-medium">Navigation</p>
 
-          <Link href="/stallions" className="block hover:text-[#D4AF37]">Stallion Directory</Link>
+          <Link href="/stallions" className="block hover:text-[#b08d57]">Stallion Directory</Link>
 
-          <Link href="/" className="block hover:text-[#D4AF37]">Owners</Link>
+          <Link href="/" className="block hover:text-[#b08d57]">Owners</Link>
 
-          <Link href="/resources" className="block hover:text-[#D4AF37]">Breeding Service Providers</Link>
+          <Link href="/resources" className="block hover:text-[#b08d57]">Breeding Service Providers</Link>
 
-          <Link href="/pricing" className="block hover:text-[#D4AF37]">Pricing</Link>
+          <Link href="/pricing" className="block hover:text-[#b08d57]">Pricing</Link>
 
-          <Link href="/submit-stallion" className="block hover:text-[#D4AF37]">Submit a Listing</Link>
+          <Link href="/submit-stallion" className="block hover:text-[#b08d57]">Submit a Listing</Link>
 
-          <Link href="/about" className="block hover:text-[#D4AF37]">About</Link>
+          <Link href="/about" className="block hover:text-[#b08d57]">About</Link>
 
-          <Link href="/" className="block hover:text-[#D4AF37]">Contact</Link>
+          <Link href="/" className="block hover:text-[#b08d57]">Contact</Link>
         </div>
 
         <div>
           <p className="text-white font-medium">Contact</p>
           <a
             href="mailto:info@leadingsiresregistry.com"
-            className="hover:text-[#D4AF37]"
+            className="hover:text-[#b08d57]"
           >
             info@leadingsiresregistry.com
           </a>

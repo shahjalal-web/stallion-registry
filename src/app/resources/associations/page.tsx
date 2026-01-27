@@ -20,7 +20,7 @@ export default function AssociationsPage() {
               <td className="px-4 py-3">AQHA</td>
               <td className="px-4 py-3">Quarter Horse</td>
               <td className="px-4 py-3">
-                <a href="#" className="text-[#D4AF37] hover:underline">Website</a>
+                <a href="#" className="text-[#b08d57] hover:underline">Website</a>
               </td>
               <td className="px-4 py-3">Primary registry</td>
             </tr>
