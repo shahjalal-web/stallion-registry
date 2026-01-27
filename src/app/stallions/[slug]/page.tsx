@@ -33,7 +33,7 @@ export default async function StallionProfilePage({
       <hr className="border-t border-(--gold-soft)" />
       <PedigreeBlock stallion={stallion} />
       <hr className="border-t border-(--gold-soft)" />
-      <PerformanceTable stallion={stallion} />
+      <PerformanceTable records={stallion.performanceRecords} />
       <BreedingStats stallion={stallion} />
       <NotableProgeny stallion={stallion} />
       <DisciplineCoverage stallion={stallion} />
