@@ -265,6 +265,7 @@ export default function SubmitStallionPage() {
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
+              <FieldLabel>Status *</FieldLabel>
               <Select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as any)}
