@@ -3,108 +3,120 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-
-const nav = [
-  { href: "/", label: "Registry" },
-  { href: "/stallions", label: "Stallion Directory" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/about", label: "About" },
-  { href: "/submit-stallion", label: "Submit Stallion" },
-  { href: "/agents", label: "Agents & Importers" },
-];
+import { useEffect, useRef, useState } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setOpen(false);
+    setResourcesOpen(false);
   }, [pathname]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setResourcesOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const isActive = (href: string) => pathname === href;
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-800 bg-black/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
-        <Link
-          href="/"
-          className="text-sm font-semibold tracking-wide text-white"
-        >
+        <Link href="/" className="text-sm font-semibold tracking-wide text-white">
           Leading Sires Registry
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-5 sm:flex">
-          {nav.map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`text-sm transition-colors ${
-                  active
-                    ? "text-[#D4AF37] border-b border-[#D4AF37] pb-1"
-                    : "text-zinc-400 hover:text-white"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+        <nav className="hidden items-center gap-6 sm:flex text-sm">
+
+          <Link href="/" className={isActive("/") ? "text-[#D4AF37] border-b border-[#D4AF37] pb-1" : "text-zinc-400 hover:text-white"}>
+            Registry
+          </Link>
+
+          <Link href="/stallions" className={isActive("/stallions") ? "text-[#D4AF37] border-b border-[#D4AF37] pb-1" : "text-zinc-400 hover:text-white"}>
+            Stallion Directory
+          </Link>
+
+          <Link href="/pricing" className={isActive("/pricing") ? "text-[#D4AF37] border-b border-[#D4AF37] pb-1" : "text-zinc-400 hover:text-white"}>
+            Pricing
+          </Link>
+
+          {/* RESOURCES DROPDOWN */}
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={() => setResourcesOpen((v) => !v)}
+              className={`flex items-center gap-1 ${
+                pathname.startsWith("/resources")
+                  ? "text-[#D4AF37]"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              Resources ▾
+            </button>
+
+            {resourcesOpen && (
+              <div className="absolute top-7 left-0 w-56 rounded-lg border border-zinc-800 bg-zinc-950 shadow-xl">
+                <Link
+                  href="/resources"
+                  className="block px-4 py-2 text-zinc-300 hover:bg-zinc-900 hover:text-white"
+                >
+                  Commercial Directory
+                </Link>
+                <Link
+                  href="/resources/associations"
+                  className="block px-4 py-2 text-zinc-300 hover:bg-zinc-900 hover:text-white"
+                >
+                  Associations & Registries
+                </Link>
+              </div>
+            )}
+          </div>
+
+          <Link href="/submit-stallion" className={isActive("/submit-stallion") ? "text-[#D4AF37] border-b border-[#D4AF37] pb-1" : "text-zinc-400 hover:text-white"}>
+            Submit Stallion
+          </Link>
+
+          <Link href="/about" className={isActive("/about") ? "text-[#D4AF37] border-b border-[#D4AF37] pb-1" : "text-zinc-400 hover:text-white"}>
+            About
+          </Link>
         </nav>
 
         {/* Mobile button */}
         <button
-          type="button"
-          aria-label="Toggle menu"
           onClick={() => setOpen((v) => !v)}
-          className="inline-flex items-center justify-center rounded-md border border-zinc-700 bg-zinc-900 p-2 text-zinc-300 hover:border-[#D4AF37] hover:text-white sm:hidden"
+          className="sm:hidden rounded-md border border-zinc-700 bg-zinc-900 p-2 text-zinc-300 hover:border-[#D4AF37] hover:text-white"
         >
-          {open ? (
-            // X icon
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M6 6L18 18M6 18L18 6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-          ) : (
-            // Hamburger
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M4 6H20M4 12H20M4 18H20"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
-          )}
+          {open ? "✕" : "☰"}
         </button>
       </div>
 
-      {/* Mobile dropdown */}
+      {/* Mobile menu */}
       {open && (
         <div className="border-t border-zinc-800 bg-zinc-950 sm:hidden">
-          <nav className="mx-auto max-w-6xl px-4 py-3">
-            <div className="flex flex-col gap-1">
-              {nav.map((item) => {
-                const active = pathname === item.href;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`rounded-md px-3 py-2 text-sm transition ${
-                      active
-                        ? "bg-zinc-900 text-[#D4AF37]"
-                        : "text-zinc-400 hover:bg-zinc-900 hover:text-white"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </div>
+          <nav className="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-1 text-sm">
+            <Link href="/" className="text-zinc-300 hover:text-white">Registry</Link>
+            <Link href="/stallions" className="text-zinc-300 hover:text-white">Stallion Directory</Link>
+            <Link href="/pricing" className="text-zinc-300 hover:text-white">Pricing</Link>
+
+            <p className="mt-2 text-xs text-zinc-500">Resources</p>
+            <Link href="/resources" className="pl-3 text-zinc-400 hover:text-white">Commercial Directory</Link>
+            <Link href="/resources/associations" className="pl-3 text-zinc-400 hover:text-white">Associations & Registries</Link>
+
+            <Link href="/submit-stallion" className="mt-2 text-zinc-300 hover:text-white">Submit Stallion</Link>
+            <Link href="/about" className="text-zinc-300 hover:text-white">About</Link>
           </nav>
         </div>
       )}

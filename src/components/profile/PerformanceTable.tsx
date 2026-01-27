@@ -1,84 +1,87 @@
-import type { Stallion } from "@/types/stallion";
-import Section from "./Section";
+"use client";
+import { useState } from "react";
+import type { PerformanceEntry } from "@/types/stallion";
 
-export default function PerformanceTable({ stallion }: { stallion: Stallion }) {
-  const rows = stallion.performanceRecords || [];
+export default function PerformanceSection({
+  records,
+}: {
+  records?: PerformanceEntry[];
+}) {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  if (!records?.length) return null;
 
   return (
-    <Section
-      title="Performance Record"
-      subtitle="Where possible, records should be verified through official results."
-    >
-      {rows.length === 0 ? (
-        <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4 text-sm text-zinc-500">
-          No verified performance records.
-        </div>
-      ) : (
-        <div className="overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950 shadow-md shadow-black/30">
-          <div className="w-full overflow-x-auto">
-            <table className="min-w-215 w-full border-collapse">
-              <thead className="bg-zinc-900">
-                <tr className="text-left text-xs font-medium text-zinc-400">
-                  <th className="whitespace-nowrap px-4 py-3">Year</th>
-                  <th className="whitespace-nowrap px-4 py-3">
-                    Association / Event
-                  </th>
-                  <th className="whitespace-nowrap px-4 py-3">
-                    Discipline / Class
-                  </th>
-                  <th className="whitespace-nowrap px-4 py-3">Result</th>
-                  <th className="hidden whitespace-nowrap px-4 py-3 sm:table-cell">
-                    Reference
-                  </th>
-                </tr>
-              </thead>
+    <section className="rounded-xl border border-zinc-800 bg-zinc-950 p-6 shadow-lg shadow-black/30">
+      <h2 className="text-sm font-semibold text-white">Performance Record</h2>
 
-              <tbody>
-                {rows.map((r, idx) => (
-                  <tr
-                    key={idx}
-                    className="border-t border-zinc-800 text-sm text-zinc-300 hover:bg-zinc-900/60 transition"
-                  >
-                    <td className="whitespace-nowrap px-4 py-3 align-top">
-                      {r.year}
-                    </td>
+      <div className="mt-4 space-y-3">
+        {records.map((rec, i) => {
+          const open = openIndex === i;
 
-                    <td className="px-4 py-3 align-top">
-                      <div className="min-w-55">{r.event}</div>
-                    </td>
+          return (
+            <div
+              key={i}
+              className="rounded-lg border border-zinc-800 bg-zinc-900 p-4"
+            >
+              {/* MAIN ROW */}
+              <div
+                className="flex cursor-pointer items-center justify-between"
+                onClick={() => setOpenIndex(open ? null : i)}
+              >
+                <div className="space-y-1">
+                  <p className="text-sm text-white">
+                    {rec.year} — {rec.event}
+                  </p>
+                  <p className="text-xs text-zinc-400">
+                    {rec.discipline} · {rec.result}
+                  </p>
+                </div>
 
-                    <td className="px-4 py-3 align-top">
-                      <div className="min-w-55">{r.discipline}</div>
-                    </td>
+                <span className="text-xs text-[#D4AF37]">
+                  {open ? "Hide details" : "View details"}
+                </span>
+              </div>
 
-                    <td className="px-4 py-3 align-top">
-                      <div className="min-w-45">{r.result}</div>
-                    </td>
+              {/* 🔽 EXPANDED METADATA */}
+              {open && (
+                <div className="mt-4 space-y-2 border-t border-zinc-800 pt-3 text-xs text-zinc-300">
+                  {rec.notes && (
+                    <p>
+                      <span className="text-zinc-500">Notes:</span> {rec.notes}
+                    </p>
+                  )}
 
-                    <td className="hidden px-4 py-3 align-top sm:table-cell">
-                      {r.reference?.href ? (
-                        <a
-                          href={r.reference.href}
-                          target="_blank"
-                          className="whitespace-nowrap text-[#D4AF37] hover:underline"
-                        >
-                          {r.reference.label || "Link"}
-                        </a>
-                      ) : (
-                        "—"
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                  {rec.judges && (
+                    <p>
+                      <span className="text-zinc-500">Judges:</span>{" "}
+                      {rec.judges}
+                    </p>
+                  )}
 
-          <div className="border-t border-zinc-800 bg-zinc-900 p-3 text-xs text-zinc-500 sm:hidden">
-            Swipe horizontally to view full table.
-          </div>
-        </div>
-      )}
-    </Section>
+                  {rec.levelEarnings && (
+                    <p>
+                      <span className="text-zinc-500">Level earnings:</span>{" "}
+                      {rec.levelEarnings.value.toLocaleString()}{" "}
+                      {rec.levelEarnings.currency}
+                    </p>
+                  )}
+
+                  {rec.reference && (
+                    <a
+                      href={rec.reference.href}
+                      target="_blank"
+                      className="text-[#D4AF37] hover:underline"
+                    >
+                      View official reference
+                    </a>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 }

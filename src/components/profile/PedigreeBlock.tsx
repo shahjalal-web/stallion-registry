@@ -1,35 +1,80 @@
+"use client";
+
+import { useState } from "react";
 import type { Stallion } from "@/types/stallion";
 import Section from "./Section";
 
-function Node(props: { title: string; value?: string }) {
-  return (
-    <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4 shadow-sm shadow-black/30">
-      <p className="text-xs font-medium text-zinc-400">{props.title}</p>
-      <p className="mt-1 text-sm font-medium text-zinc-100">
-        {props.value || "—"}
-      </p>
-    </div>
-  );
+function Label({ children }: { children: React.ReactNode }) {
+  return <p className="text-xs text-zinc-400">{children}</p>;
+}
+
+function Value({ children }: { children: React.ReactNode }) {
+  return <p className="text-sm text-white">{children}</p>;
 }
 
 export default function PedigreeBlock({ stallion }: { stallion: Stallion }) {
+  const [expanded, setExpanded] = useState(false);
   const p = stallion.pedigree;
 
   return (
     <Section
       title="Pedigree"
-      subtitle="Structured lineage presentation. Deeper pedigree may be incomplete."
+      subtitle="Parentage presented in reference format. Extended lineage may be expanded."
     >
-      <div className="grid gap-4 md:grid-cols-2">
-        <Node title="Sire" value={p.sireName} />
-        <Node title="Dam" value={p.damName} />
-      </div>
+      <div className="space-y-4">
 
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Node title="Grandsire (sire line)" value={p.grandsireSireLine} />
-        <Node title="Granddam (sire line)" value={p.granddamSireLine} />
-        <Node title="Grandsire (dam line)" value={p.grandsireDamLine} />
-        <Node title="Granddam (dam line)" value={p.granddamDamLine} />
+        {/* BASIC */}
+        <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
+          <Label>Sire</Label>
+          <Value>{p.sireName}</Value>
+
+          <div className="mt-3">
+            <Label>Dam</Label>
+            <Value>{p.damName}</Value>
+          </div>
+        </div>
+
+        {/* TOGGLE BUTTON */}
+        {(p.grandsireSireLine ||
+          p.granddamSireLine ||
+          p.grandsireDamLine ||
+          p.granddamDamLine) && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-sm text-[#B08D57] hover:underline"
+          >
+            {expanded ? "Hide extended pedigree" : "View extended pedigree"}
+          </button>
+        )}
+
+        {/* EXTENDED */}
+        {expanded && (
+          <div className="grid gap-4 md:grid-cols-2">
+
+            <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
+              <p className="text-sm font-semibold text-white mb-2">Sire Line</p>
+              <Label>Grandsire (Sire’s sire)</Label>
+              <Value>{p.grandsireSireLine || "—"}</Value>
+
+              <div className="mt-3">
+                <Label>Granddam (Sire’s dam)</Label>
+                <Value>{p.granddamSireLine || "—"}</Value>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
+              <p className="text-sm font-semibold text-white mb-2">Dam Line</p>
+              <Label>Grandsire (Dam’s sire)</Label>
+              <Value>{p.grandsireDamLine || "—"}</Value>
+
+              <div className="mt-3">
+                <Label>Granddam (Dam’s dam)</Label>
+                <Value>{p.granddamDamLine || "—"}</Value>
+              </div>
+            </div>
+
+          </div>
+        )}
       </div>
     </Section>
   );

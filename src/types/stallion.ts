@@ -24,7 +24,14 @@ export type PerformanceEntry = {
   discipline: string;
   result: string;
   reference?: Link;
+
+  // 🔽 New optional metadata (UI expandable details)
+  notes?: string;
+  judges?: string;
+  earnings?: string;
+   levelEarnings?: { value: number; currency: string };
 };
+
 
 export type ProgenyEntry = {
   name: string;
@@ -109,4 +116,5 @@ export type Stallion = {
 
   isFoundingMember?: boolean;
   hasActiveSubscription?: boolean;
+
 };

@@ -49,11 +49,11 @@ export default function StallionDirectoryPage() {
     <div className="space-y-6">
       <header className="space-y-2">
         <h1 className="text-xl font-semibold">Stallion Directory</h1>
-        <p className="text-sm text-zinc-400">
+        {/* <p className="text-sm text-zinc-400">
           Structured reference cards linking to full registry-format profiles.
-        </p>
+        </p> */}
       </header>
-      
+
       <hr className="border-t border-(--gold-soft)" />
 
       <StallionDirectoryFilters
@@ -82,44 +82,44 @@ export default function StallionDirectoryPage() {
                 <th className="px-4 py-3 text-left">Stallion</th>
                 <th className="px-4 py-3 text-left">Pedigree</th>
                 <th className="px-4 py-3 text-left">Breed</th>
-                <th className="px-4 py-3 text-left">Stud Fee</th>
+                <th className="px-4 py-3">Country</th>
               </tr>
             </thead>
 
             <tbody>
-  {filtered.map((s) => (
-    <tr
-      key={s.id}
-      className="border-t border-(--gold-soft) hover:bg-(--bg-surface)"
-    >
-      <td className="px-4 py-3">
-        <Link href={`/stallions/${s.slug}`}>
-          <img
-            src={s.media?.primaryImageUrl}
-            className="h-12 w-12 rounded object-cover"
-          />
-        </Link>
-      </td>
+              {filtered.map((s) => (
+                <tr
+                  key={s.id}
+                  className="border-t border-(--gold-soft) hover:bg-(--bg-surface)"
+                >
+                  <td className="px-4 py-3">
+                    <Link href={`/stallions/${s.slug}`}>
+                      <img
+                        src={s.media?.primaryImageUrl}
+                        className="h-12 w-12 rounded object-cover"
+                      />
+                    </Link>
+                  </td>
 
-      <td className="px-4 py-3 font-medium text-white">
-        <Link href={`/stallions/${s.slug}`} className="hover:text-(--gold)">
-          {s.registeredName}
-        </Link>
-      </td>
+                  <td className="px-4 py-3 font-medium text-white">
+                    <Link
+                      href={`/stallions/${s.slug}`}
+                      className="hover:text-(--gold)"
+                    >
+                      {s.registeredName}
+                    </Link>
+                  </td>
 
-      <td className="px-4 py-3 text-(--text-muted)">
-        {s.pedigree.sireName} × {s.pedigree.damName}
-      </td>
+                  <td className="px-4 py-3 text-(--text-muted)">
+                    {s.pedigree.sireName} × {s.pedigree.damName}
+                  </td>
 
-      <td className="px-4 py-3">{s.breed}</td>
+                  <td className="px-4 py-3">{s.breed}</td>
 
-      <td className="px-4 py-3">
-        {s.studFee ? `${s.studFee.value} ${s.studFee.currency}` : "—"}
-      </td>
-    </tr>
-  ))}
-</tbody>
-
+                  <td className="px-4 py-3 text-center">{s.countryOfStanding}</td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       </section>

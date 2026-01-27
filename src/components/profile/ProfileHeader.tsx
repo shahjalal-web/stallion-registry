@@ -1,4 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
+"use client";
+
+import { useState } from "react";
 import type { Stallion } from "@/types/stallion";
 import { formatHeight } from "../../lib/utils";
 import FoundingBadge from "./FoundingBadge";
@@ -12,10 +15,12 @@ function Value({ children }: { children: React.ReactNode }) {
 
 export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
   const owner = stallion.owners?.[0];
+  const [showPedigree, setShowPedigree] = useState(false);
 
   return (
     <section className="rounded-xl border border-zinc-800 bg-zinc-950 p-6 shadow-lg shadow-black/30">
       <div className="grid gap-6 md:grid-cols-[240px_1fr]">
+        {/* IMAGE + BUTTONS */}
         <div className="space-y-3">
           <div className="aspect-4/5 overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900">
             <img
@@ -31,12 +36,7 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
           <div className="flex items-center justify-between">
             <button
               disabled={stallion.hasActiveSubscription === false}
-              title={
-                stallion.hasActiveSubscription === false
-                  ? "Subscription required"
-                  : "Save to favourites"
-              }
-              className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-300 transition hover:border-[#D4AF37] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-300 transition hover:border-[#D4AF37] hover:text-white disabled:opacity-60"
             >
               Save to favourites
             </button>
@@ -45,25 +45,26 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
           </div>
         </div>
 
+        {/* DETAILS */}
         <div className="space-y-4">
-          <div className="space-y-1">
+          <div>
             <h1 className="text-2xl font-semibold tracking-tight text-white">
               {stallion.registeredName}
             </h1>
             <p className="text-sm text-zinc-400">
               Breed: {stallion.breed} · Discipline focus:{" "}
-              {stallion.disciplineFocus?.length
-                ? stallion.disciplineFocus.join(" · ")
-                : "—"}
+              {stallion.disciplineFocus?.join(" · ") || "—"}
             </p>
           </div>
 
+          {/* CORE INFO */}
           <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <Label>Year of birth</Label>
                 <Value>{stallion.yearOfBirth}</Value>
               </div>
+
               <div>
                 <Label>Brief description</Label>
                 <Value>
@@ -72,97 +73,56 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
                     .join(" · ") || "—"}
                 </Value>
               </div>
+
               <div className="sm:col-span-2">
                 <Label>Parentage</Label>
                 <Value>
                   {stallion.pedigree.sireName} × {stallion.pedigree.damName}
                 </Value>
+
+                {/* 🔽 EXTENDED PEDIGREE TOGGLE */}
+                <button
+                  onClick={() => setShowPedigree(!showPedigree)}
+                  className="mt-2 text-xs text-[#D4AF37] hover:underline"
+                >
+                  {showPedigree ? "Hide extended pedigree" : "View extended pedigree"}
+                </button>
+
+                {showPedigree && (
+                  <div className="mt-3 grid gap-2 text-xs text-zinc-300 sm:grid-cols-2">
+                    <p>
+                      <span className="text-zinc-500">Grandsire (Sire line): </span>
+                      {stallion.pedigree.grandsireSireLine || "—"}
+                    </p>
+                    <p>
+                      <span className="text-zinc-500">Granddam (Sire line): </span>
+                      {stallion.pedigree.granddamSireLine || "—"}
+                    </p>
+                    <p>
+                      <span className="text-zinc-500">Grandsire (Dam line): </span>
+                      {stallion.pedigree.grandsireDamLine || "—"}
+                    </p>
+                    <p>
+                      <span className="text-zinc-500">Granddam (Dam line): </span>
+                      {stallion.pedigree.granddamDamLine || "—"}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
+          {/* OWNER + REGISTRY */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
               <p className="text-sm font-semibold text-white">Owner</p>
-              <div className="mt-3 space-y-2">
-                <div>
-                  <Label>Name</Label>
-                  <Value>{owner?.name || "—"}</Value>
-                </div>
-                <div>
-                  <Label>Address</Label>
-                  <Value>{owner?.addressCityState || "—"}</Value>
-                </div>
-                <div>
-                  <Label>Phone</Label>
-                  <Value>{owner?.phone || "—"}</Value>
-                </div>
-                <div className="flex flex-col gap-1 text-sm">
-                  {owner?.website && (
-                    <a className="text-[#D4AF37] hover:underline" href={owner.website} target="_blank">
-                      Farm / ranch website
-                    </a>
-                  )}
-                  {owner?.facebook && (
-                    <a className="text-[#D4AF37] hover:underline" href={owner.facebook} target="_blank">
-                      Facebook
-                    </a>
-                  )}
-                  {owner?.instagram && (
-                    <a className="text-[#D4AF37] hover:underline" href={owner.instagram} target="_blank">
-                      Instagram
-                    </a>
-                  )}
-                </div>
-              </div>
+              <Value>{owner?.name || "—"}</Value>
             </div>
 
             <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
               <p className="text-sm font-semibold text-white">Registry Record</p>
-              <div className="mt-3 space-y-2">
-                <div>
-                  <Label>Registry association</Label>
-                  <Value>{stallion.registryAssociation}</Value>
-                </div>
-                <div>
-                  <Label>Registration number</Label>
-                  <Value>{stallion.registrationNumber}</Value>
-                </div>
-                <div>
-                  <Label>Record status</Label>
-                  <Value>{stallion.recordStatus}</Value>
-                </div>
-                <div>
-                  <Label>Official registry link</Label>
-                  <Value>
-                    {stallion.officialRegistryLink ? (
-                      <a
-                        href={stallion.officialRegistryLink}
-                        target="_blank"
-                        className="text-[#D4AF37] hover:underline"
-                      >
-                        View official record
-                      </a>
-                    ) : (
-                      "—"
-                    )}
-                  </Value>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
-              <p className="text-sm font-semibold text-white">Disease testing results</p>
-              <p className="mt-2 text-sm text-zinc-300">
-                {stallion.diseaseTestingResults || "—"}
-              </p>
-            </div>
-
-            <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
-              <p className="text-sm font-semibold text-white">Colour testing results</p>
-              <p className="mt-2 text-sm text-zinc-300">
-                {stallion.colourTestingResults || "—"}
-              </p>
+              <Value>{stallion.registryAssociation}</Value>
+              <Value>{stallion.registrationNumber}</Value>
             </div>
           </div>
         </div>

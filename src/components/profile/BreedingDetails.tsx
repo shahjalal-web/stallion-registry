@@ -8,9 +8,7 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
       <p className="text-xs font-medium text-zinc-300">{label}</p>
 
       {/* ✅ makes long text / urls wrap nicely */}
-      <div className="text-sm text-zinc-400 wrap-break-word">
-        {value}
-      </div>
+      <div className="text-sm text-zinc-400 wrap-break-word">{value}</div>
     </div>
   );
 }
@@ -27,13 +25,10 @@ export default function BreedingDetails({ stallion }: { stallion: Stallion }) {
             />
 
             <Row
-              label="Stud fee"
+              label="Stud fee (reference)"
               value={
                 stallion.studFee
-                  ? formatCurrency(
-                      stallion.studFee.value,
-                      stallion.studFee.currency,
-                    )
+                  ? `${formatCurrency(stallion.studFee.value, stallion.studFee.currency)} AUD/USD/EUR`
                   : "—"
               }
             />
@@ -79,7 +74,9 @@ export default function BreedingDetails({ stallion }: { stallion: Stallion }) {
               label="Additional notes"
               value={
                 stallion.additionalBreedingNotes ? (
-                  <p className="leading-6">{stallion.additionalBreedingNotes}</p>
+                  <p className="leading-6">
+                    {stallion.additionalBreedingNotes}
+                  </p>
                 ) : (
                   "—"
                 )
