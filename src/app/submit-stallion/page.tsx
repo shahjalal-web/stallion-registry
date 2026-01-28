@@ -344,159 +344,6 @@ export default function SubmitStallionPage() {
           </div>
         </SectionCard>
 
-        {/* BLOCK 2.5: PEDIGREE (Expandable Tree) */}
-        <SectionCard
-          title="Pedigree Information"
-          subtitle="Enter sire, dam, and extended family history."
-        >
-          <div className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              {/* SIRE SIDE */}
-              <div className="space-y-4 rounded-lg border border-zinc-800 p-4 bg-zinc-900/20">
-                <h3 className="text-[#b08d57] text-xs font-bold uppercase tracking-wider italic">
-                  Sire Side
-                </h3>
-
-                {/* Parent & Grandparents (আগের মতই) */}
-                <Input
-                  value={pedigree.sire.name}
-                  onChange={(e) => updatePedigree("sire.name", e.target.value)}
-                  placeholder="Sire Name"
-                />
-
-                <div className="grid grid-cols-2 gap-3 border-t border-zinc-800 pt-3">
-                  <Input
-                    className="text-xs"
-                    value={pedigree.sire.sire.name}
-                    onChange={(e) =>
-                      updatePedigree("sire.sire.name", e.target.value)
-                    }
-                    placeholder="Grandsire"
-                  />
-                  <Input
-                    className="text-xs"
-                    value={pedigree.sire.dam.name}
-                    onChange={(e) =>
-                      updatePedigree("sire.dam.name", e.target.value)
-                    }
-                    placeholder="Granddam"
-                  />
-                </div>
-
-                {/* ৩ নম্বর রিকোয়ারমেন্ট: Expandable Section for Great-Grandparents */}
-                {showExtended && (
-                  <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-zinc-800/50 animate-in fade-in slide-in-from-top-1">
-                    <Input
-                      className="text-[10px] h-7"
-                      placeholder="Great Grandsire"
-                      onChange={(e) =>
-                        updatePedigree("sire.sire.sire.name", e.target.value)
-                      }
-                    />
-                    <Input
-                      className="text-[10px] h-7"
-                      placeholder="Great Granddam"
-                      onChange={(e) =>
-                        updatePedigree("sire.sire.dam.name", e.target.value)
-                      }
-                    />
-                    <Input
-                      className="text-[10px] h-7"
-                      placeholder="Great Grandsire"
-                      onChange={(e) =>
-                        updatePedigree("sire.dam.sire.name", e.target.value)
-                      }
-                    />
-                    <Input
-                      className="text-[10px] h-7"
-                      placeholder="Great Granddam"
-                      onChange={(e) =>
-                        updatePedigree("sire.dam.dam.name", e.target.value)
-                      }
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* DAM SIDE */}
-              <div className="space-y-4 rounded-lg border border-zinc-800 p-4 bg-zinc-900/20">
-                <h3 className="text-[#b08d57] text-xs font-bold uppercase tracking-wider italic">
-                  Dam Side
-                </h3>
-                <Input
-                  value={pedigree.dam.name}
-                  onChange={(e) => updatePedigree("dam.name", e.target.value)}
-                  placeholder="Dam Name"
-                />
-                <div className="grid grid-cols-2 gap-3 border-t border-zinc-800 pt-3">
-                  <Input
-                    className="text-xs"
-                    value={pedigree.dam.sire.name}
-                    onChange={(e) =>
-                      updatePedigree("dam.sire.name", e.target.value)
-                    }
-                    placeholder="Grandsire"
-                  />
-                  <Input
-                    className="text-xs"
-                    value={pedigree.dam.dam.name}
-                    onChange={(e) =>
-                      updatePedigree("dam.dam.name", e.target.value)
-                    }
-                    placeholder="Granddam"
-                  />
-                </div>
-
-                {/* Expandable for Dam side */}
-                {showExtended && (
-                  <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-zinc-800/50 animate-in fade-in">
-                    <Input
-                      className="text-[10px] h-7"
-                      placeholder="Great Grandsire"
-                      onChange={(e) =>
-                        updatePedigree("dam.sire.sire.name", e.target.value)
-                      }
-                    />
-                    <Input
-                      className="text-[10px] h-7"
-                      placeholder="Great Granddam"
-                      onChange={(e) =>
-                        updatePedigree("dam.sire.dam.name", e.target.value)
-                      }
-                    />
-                    <Input
-                      className="text-[10px] h-7"
-                      placeholder="Great Grandsire"
-                      onChange={(e) =>
-                        updatePedigree("dam.dam.sire.name", e.target.value)
-                      }
-                    />
-                    <Input
-                      className="text-[10px] h-7"
-                      placeholder="Great Granddam"
-                      onChange={(e) =>
-                        updatePedigree("dam.dam.dam.name", e.target.value)
-                      }
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Toggle Button */}
-            <div className="flex justify-center">
-              <button
-                type="button"
-                onClick={() => setShowExtended(!showExtended)}
-                className="text-xs border border-[#b08d57] text-[#b08d57] px-4 py-1.5 rounded hover:bg-[#b08d57] hover:text-black transition-colors"
-              >
-                {showExtended
-                  ? "− Hide Extended Pedigree"
-                  : "+ Show Extended Pedigree (Another Generation)"}
-              </button>
-            </div>
-          </div>
-        </SectionCard>
 
         {/* BLOCK 3: PERFORMANCE RECORD */}
         <SectionCard
@@ -600,53 +447,7 @@ export default function SubmitStallionPage() {
           </div>
         </SectionCard>
 
-        {/* BLOCK 4: BREEDING & PERFORMANCE STATS */}
-        <SectionCard
-          title="Breeding & Progeny"
-          subtitle="Stud fees and offspring information."
-        >
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <FieldLabel>Stud Fee (Reference) $ AUD/USD/EUR</FieldLabel>
-              <Input
-                value={studFee}
-                onChange={(e) => setStudFee(e.target.value)}
-                placeholder="e.g. 1750 USD"
-              />
-            </div>
-            <div>
-              <FieldLabel>Guarantee</FieldLabel>
-              <Select
-                value={guarantee}
-                onChange={(e) => setGuarantee(e.target.value as Guarantee)}
-              >
-                <option value="None">None</option>
-                <option value="LFG">LFG</option>
-                <option value="Colour">Colour</option>
-              </Select>
-            </div>
-            <div className="sm:col-span-2">
-              <FieldLabel>Notable Progeny</FieldLabel>
-              <Textarea
-                value={notableProgeny}
-                onChange={(e) => setNotableProgeny(e.target.value)}
-                placeholder="List of performing offspring..."
-                rows={3}
-              />
-            </div>
-            <div className="sm:col-span-2">
-              <FieldLabel>Breeding Statistics</FieldLabel>
-              <Textarea
-                value={breedingStats}
-                onChange={(e) => setBreedingStats(e.target.value)}
-                placeholder="Foal counts, point earners, etc."
-                rows={3}
-              />
-            </div>
-          </div>
-        </SectionCard>
-
-        {/* Block 4.1:  Notable Progeny */}
+        {/* BLOCK 4: NOTABLE PROGENY */}
         <SectionCard
           title="Notable Progeny"
           subtitle="List notable offspring and their achievements."
@@ -655,7 +456,7 @@ export default function SubmitStallionPage() {
             {progenyRows.map((row, idx) => (
               <div
                 key={idx}
-                className="rounded-lg border border-zinc-800 bg-zinc-950 p-4"
+                className="relative rounded-lg border border-zinc-800 bg-zinc-950 p-4"
               >
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   <Input
@@ -665,7 +466,6 @@ export default function SubmitStallionPage() {
                       updateProgenyRow(idx, "name", e.target.value)
                     }
                   />
-
                   <Input
                     placeholder="Year"
                     value={row.year}
@@ -673,7 +473,6 @@ export default function SubmitStallionPage() {
                       updateProgenyRow(idx, "year", e.target.value)
                     }
                   />
-
                   <Input
                     placeholder="Association"
                     value={row.association}
@@ -681,7 +480,6 @@ export default function SubmitStallionPage() {
                       updateProgenyRow(idx, "association", e.target.value)
                     }
                   />
-
                   <Input
                     placeholder="Discipline"
                     value={row.discipline}
@@ -689,7 +487,6 @@ export default function SubmitStallionPage() {
                       updateProgenyRow(idx, "discipline", e.target.value)
                     }
                   />
-
                   <Input
                     placeholder="Result"
                     value={row.result}
@@ -697,7 +494,6 @@ export default function SubmitStallionPage() {
                       updateProgenyRow(idx, "result", e.target.value)
                     }
                   />
-
                   <Input
                     placeholder="Reference link"
                     value={row.reference}
@@ -722,10 +518,50 @@ export default function SubmitStallionPage() {
             <button
               type="button"
               onClick={addProgenyRow}
-              className="rounded-md border border-[#D4AF37] px-3 py-2 text-sm text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black"
+              className="rounded-md border border-[#D4AF37] px-3 py-2 text-sm text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all"
             >
-              Add progeny
+              + Add progeny row
             </button>
+          </div>
+        </SectionCard>
+
+        {/* ২. BLOCK 4: BREEDING (এখান থেকে Notable Progeny Textarea বাদ দেওয়া হয়েছে) */}
+        <SectionCard
+          title="Breeding Information"
+          subtitle="Stud fees and basic statistics."
+        >
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <FieldLabel>Stud Fee (Reference) $ AUD/USD/EUR</FieldLabel>
+              <Input
+                value={studFee}
+                onChange={(e) => setStudFee(e.target.value)}
+                placeholder="e.g. 1750 USD"
+              />
+            </div>
+            <div>
+              <FieldLabel>Guarantee</FieldLabel>
+              <Select
+                value={guarantee}
+                onChange={(e) => setGuarantee(e.target.value as Guarantee)}
+              >
+                <option value="None">None</option>
+                <option value="LFG">LFG</option>
+                <option value="Colour">Colour</option>
+              </Select>
+            </div>
+
+            {/* Notable Progeny Textarea টি এখান থেকে সরিয়ে ফেলা হয়েছে */}
+
+            <div className="sm:col-span-2">
+              <FieldLabel>Breeding Statistics</FieldLabel>
+              <Textarea
+                value={breedingStats}
+                onChange={(e) => setBreedingStats(e.target.value)}
+                placeholder="Foal counts, point earners, etc."
+                rows={3}
+              />
+            </div>
           </div>
         </SectionCard>
 
