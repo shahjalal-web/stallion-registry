@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { useState } from "react";
@@ -27,29 +28,29 @@ export default function PedigreeBlock({ stallion }: { stallion: Stallion }) {
             Pedigree
           </h2>
           <p className="mt-1 text-xs text-zinc-500">
-            Official parentage and family history.
+            Official parentage information (up to 4 generations).
           </p>
         </div>
+        
         <button
           onClick={() => setOpen(!open)}
-          className="text-xs font-bold text-[#B08D57] border border-[#B08D57]/30 px-3 py-1 rounded hover:bg-[#B08D57] hover:text-black transition-all"
+          className="rounded-full border border-[#B08D57]/40 px-4 py-1.5 text-xs font-bold text-[#B08D57] transition-all hover:bg-[#B08D57] hover:text-black"
         >
-          {open ? "− View Standard" : "+ View Extended (4-5 Gen)"}
+          {open ? "− View Standard" : "+ View Extended (4 Gen)"}
         </button>
       </div>
 
-      {/* GENERATION 1 & 2 (Standard View) */}
+      {/* GENERATION 1 & 2: SIRE & DAM SIDE */}
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
-        <div className="space-y-4 rounded-lg bg-zinc-900/30 p-4 border border-zinc-800/50">
-          <h3 className="text-[#B08D57] text-[10px] font-black uppercase">
-            Sire Side
-          </h3>
-          <div className="space-y-3">
+        {/* Sire's Side */}
+        <div className="rounded-lg border border-zinc-800/50 bg-zinc-900/20 p-4">
+          <h3 className="mb-3 text-[10px] font-black uppercase text-[#B08D57]">Sire Line</h3>
+          <div className="space-y-4">
             <div>
               <Label>Sire (Father)</Label>
               <Value>{p.sire?.name || "—"}</Value>
             </div>
-            <div className="grid grid-cols-2 gap-2 border-t border-zinc-800 pt-2">
+            <div className="grid grid-cols-2 gap-4 border-t border-zinc-800 pt-3">
               <div>
                 <Label>Grandsire</Label>
                 <Value>{p.sire?.sire?.name || "—"}</Value>
@@ -62,16 +63,15 @@ export default function PedigreeBlock({ stallion }: { stallion: Stallion }) {
           </div>
         </div>
 
-        <div className="space-y-4 rounded-lg bg-zinc-900/30 p-4 border border-zinc-800/50">
-          <h3 className="text-[#B08D57] text-[10px] font-black uppercase">
-            Dam Side
-          </h3>
-          <div className="space-y-3">
+        {/* Dam's Side */}
+        <div className="rounded-lg border border-zinc-800/50 bg-zinc-900/20 p-4">
+          <h3 className="mb-3 text-[10px] font-black uppercase text-[#B08D57]">Dam Line</h3>
+          <div className="space-y-4">
             <div>
               <Label>Dam (Mother)</Label>
               <Value>{p.dam?.name || "—"}</Value>
             </div>
-            <div className="grid grid-cols-2 gap-2 border-t border-zinc-800 pt-2">
+            <div className="grid grid-cols-2 gap-4 border-t border-zinc-800 pt-3">
               <div>
                 <Label>Grandsire</Label>
                 <Value>{p.dam?.sire?.name || "—"}</Value>
@@ -87,50 +87,57 @@ export default function PedigreeBlock({ stallion }: { stallion: Stallion }) {
 
       {/* GENERATION 3: GREAT GRANDPARENTS (Extended View) */}
       {open && (
-        <div className="mt-6 animate-in fade-in slide-in-from-top-2 duration-300">
+        <div className="mt-6 animate-in fade-in slide-in-from-top-2 duration-500">
           <div className="grid gap-6 sm:grid-cols-2">
-            {/* Sire's Great Grandparents */}
-            <div className="grid grid-cols-2 gap-4 rounded-lg border border-dashed border-zinc-800 p-4">
+            {/* Sire's Side Great Grandparents */}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-lg border border-dashed border-zinc-800 p-4 bg-zinc-900/10">
+              <div className="col-span-2 mb-1">
+                <p className="text-[9px] font-bold text-zinc-600 uppercase">Sire's G-Parents</p>
+              </div>
               <div>
-                <Label>Great Grandsire</Label>
+                <Label>G-Grandsire</Label>
                 <Value>{p.sire?.sire?.sire?.name || "—"}</Value>
               </div>
               <div>
-                <Label>Great Granddam</Label>
+                <Label>G-Granddam</Label>
                 <Value>{p.sire?.sire?.dam?.name || "—"}</Value>
               </div>
               <div>
-                <Label>Great Grandsire</Label>
+                <Label>G-Grandsire</Label>
                 <Value>{p.sire?.dam?.sire?.name || "—"}</Value>
               </div>
               <div>
-                <Label>Great Granddam</Label>
+                <Label>G-Granddam</Label>
                 <Value>{p.sire?.dam?.dam?.name || "—"}</Value>
               </div>
             </div>
 
-            {/* Dam's Great Grandparents */}
-            <div className="grid grid-cols-2 gap-4 rounded-lg border border-dashed border-zinc-800 p-4">
+            {/* Dam's Side Great Grandparents */}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-lg border border-dashed border-zinc-800 p-4 bg-zinc-900/10">
+              <div className="col-span-2 mb-1">
+                <p className="text-[9px] font-bold text-zinc-600 uppercase">Dam's G-Parents</p>
+              </div>
               <div>
-                <Label>Great Grandsire</Label>
+                <Label>G-Grandsire</Label>
                 <Value>{p.dam?.sire?.sire?.name || "—"}</Value>
               </div>
               <div>
-                <Label>Great Granddam</Label>
+                <Label>G-Granddam</Label>
                 <Value>{p.dam?.sire?.dam?.name || "—"}</Value>
               </div>
               <div>
-                <Label>Great Grandsire</Label>
+                <Label>G-Grandsire</Label>
                 <Value>{p.dam?.dam?.sire?.name || "—"}</Value>
               </div>
               <div>
-                <Label>Great Granddam</Label>
+                <Label>G-Granddam</Label>
                 <Value>{p.dam?.dam?.dam?.name || "—"}</Value>
               </div>
             </div>
           </div>
+          
           <p className="mt-4 text-center text-[10px] text-zinc-600 italic">
-            * Extended data verified via official association records.
+            * Pedigree depth and accuracy are based on official registry papers provided by the owner.
           </p>
         </div>
       )}

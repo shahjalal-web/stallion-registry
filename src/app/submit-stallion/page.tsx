@@ -127,10 +127,8 @@ export default function SubmitStallionPage() {
   // 1. Core Identity
   const [status, setStatus] = useState<StallionStatus>("Active");
   const [registeredName, setRegisteredName] = useState("");
-  const [breed, setBreed] = useState<Breed>("Quarter Horse");
   const [countryOfStanding, setCountryOfStanding] = useState("United States");
   const [yearOfBirth, setYearOfBirth] = useState("");
-  const [colour, setColour] = useState("");
   const [height, setHeight] = useState("");
 
   // 2. Registry (Pedigree removed as per client request)
@@ -138,12 +136,9 @@ export default function SubmitStallionPage() {
   const [officialRegistryLink, setOfficialRegistryLink] = useState("");
 
   // 3. Breeding & Stats
-  const [availability, setAvailability] = useState<SemenAvailability>("Frozen");
   const [studFee, setStudFee] = useState("");
   const [guarantee, setGuarantee] = useState<Guarantee>("None");
-  const [breedingNotes, setBreedingNotes] = useState("");
   const [breedingStats, setBreedingStats] = useState("");
-  const [notableProgeny, setNotableProgeny] = useState("");
 
   // 4. Testing
   const [diseaseTesting, setDiseaseTesting] = useState("");
@@ -158,35 +153,6 @@ export default function SubmitStallionPage() {
   const [primaryImageUrl, setPrimaryImageUrl] = useState("");
   const [galleryUrls, setGalleryUrls] = useState(["", "", ""]);
   const [videoUrl, setVideoUrl] = useState("");
-
-  const [showExtended, setShowExtended] = useState(false);
-
-  const [pedigree, setPedigree] = useState({
-    sire: {
-      name: "",
-      sire: { name: "", sire: { name: "" }, dam: { name: "" } },
-      dam: { name: "", sire: { name: "" }, dam: { name: "" } },
-    },
-    dam: {
-      name: "",
-      sire: { name: "", sire: { name: "" }, dam: { name: "" } },
-      dam: { name: "", sire: { name: "" }, dam: { name: "" } },
-    },
-  });
-
-  // ডাটা আপডেট করার ফাংশন
-  const updatePedigree = (path: string, value: string) => {
-    setPedigree((prev: any) => {
-      const newPedigree = { ...prev };
-      const keys = path.split(".");
-      let current = newPedigree;
-      for (let i = 0; i < keys.length - 1; i++) {
-        current = current[keys[i]];
-      }
-      current[keys[keys.length - 1]] = value;
-      return newPedigree;
-    });
-  };
 
   const removePerformanceRow = (index: any) => {
     const newRows = performanceRows.filter((_, i) => i !== index);
@@ -343,7 +309,6 @@ export default function SubmitStallionPage() {
             </div>
           </div>
         </SectionCard>
-
 
         {/* BLOCK 3: PERFORMANCE RECORD */}
         <SectionCard
@@ -635,7 +600,7 @@ export default function SubmitStallionPage() {
         <button
           type="submit"
           disabled={!canSubmit}
-          className="w-full rounded-md border border-[#b08d57] py-4 font-bold text-[#ffffff] hover:bg-[#ffc401]  transition disabled:opacity-20"
+          className="w-full rounded-md border border-[#b08d57] py-4 font-bold text-white transition-all hover:bg-[#b08d57] hover:text-black disabled:opacity-20 disabled:cursor-not-allowed"
         >
           Submit Stallion for Review
         </button>
