@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import type { PerformanceEntry } from "@/types/stallion";
+import Link from "next/link";
+import { useAuth } from "@/app/auth-context";
 
 export default function PerformanceSection({
   records,
 }: {
   records?: PerformanceEntry[];
 }) {
-  // একাধিক রো একসাথে খোলা রাখার জন্য state
+  const { user } = useAuth(); // ইউজার ডেটা নেয়া
   const [openRows, setOpenRows] = useState<number[]>([]);
 
   if (!records?.length) return null;
@@ -18,6 +20,9 @@ export default function PerformanceSection({
       prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx],
     );
   };
+
+  // প্রিমিয়াম চেক করার জন্য একটি শর্টকাট
+  const isPremium = user?.subscription === "paid";
 
   return (
     <section className="rounded-xl border border-zinc-800 bg-zinc-950 p-6 shadow-lg shadow-black/30">
@@ -30,7 +35,6 @@ export default function PerformanceSection({
             Unlimited official competition history
           </p>
         </div>
-        {/* ক্লায়েন্টের গোল্ড কালার টাচ */}
         <div className="h-px flex-1 mx-4 bg-zinc-800" />
       </div>
 
@@ -73,9 +77,10 @@ export default function PerformanceSection({
                   <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
                     {isOpen ? "Close" : "Details"}
                   </span>
-                  {/* একটি ছোট এরো আইকন দিলে ইউজার বুঝতে পারবে এটা কলাপ্সিবল */}
                   <svg
-                    className={`w-3 h-3 text-[#B08D57] transition-transform ${isOpen ? "rotate-180" : ""}`}
+                    className={`w-3 h-3 text-[#B08D57] transition-transform ${
+                      isOpen ? "rotate-180" : ""
+                    }`}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -90,71 +95,64 @@ export default function PerformanceSection({
                 </div>
               </div>
 
-              {/* EXPANDED DETAILS */}
+              {/* EXPANDED DETAILS WITH VALIDATION */}
               {isOpen && (
-                <div className="px-4 pb-4 space-y-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                <div className="relative px-4 pb-4 animate-in fade-in slide-in-from-top-1 duration-200">
                   <div className="h-px bg-zinc-800 mb-3" />
 
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  {/* লজিক: প্রিমিয়াম না হলে কন্টেন্ট ব্লার থাকবে */}
+                  <div className={`grid gap-4 sm:grid-cols-2 ${!isPremium ? "blur-sm select-none pointer-events-none opacity-40" : ""}`}>
                     {rec.notes && (
                       <div className="space-y-1">
-                        <p className="text-[10px] text-zinc-500 uppercase">
-                          Notes
-                        </p>
-                        <p className="text-xs text-zinc-300 leading-relaxed">
-                          {rec.notes}
-                        </p>
+                        <p className="text-[10px] text-zinc-500 uppercase">Notes</p>
+                        <p className="text-xs text-zinc-300 leading-relaxed">{rec.notes}</p>
                       </div>
                     )}
 
                     {rec.judges && (
                       <div className="space-y-1">
-                        <p className="text-[10px] text-zinc-500 uppercase">
-                          Judges / Officials
-                        </p>
+                        <p className="text-[10px] text-zinc-500 uppercase">Judges / Officials</p>
                         <p className="text-xs text-zinc-300">{rec.judges}</p>
                       </div>
                     )}
 
                     {rec.levelEarnings && (
                       <div className="space-y-1">
-                        <p className="text-[10px] text-zinc-500 uppercase">
-                          Earnings
-                        </p>
+                        <p className="text-[10px] text-zinc-500 uppercase">Earnings</p>
                         <p className="text-sm font-bold text-green-500/80">
-                          {rec.levelEarnings.currency}{" "}
-                          {rec.levelEarnings.value.toLocaleString()}
+                          {rec.levelEarnings.currency} {rec.levelEarnings.value.toLocaleString()}
                         </p>
                       </div>
                     )}
 
                     {rec.reference && (
                       <div className="space-y-1">
-                        <p className="text-[10px] text-zinc-500 uppercase">
-                          Verification
-                        </p>
-                        <a
-                          href={rec.reference.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-xs text-[#B08D57] hover:underline"
-                        >
+                        <p className="text-[10px] text-zinc-500 uppercase">Verification</p>
+                        <span className="inline-flex items-center gap-1 text-xs text-[#B08D57]">
                           Official Result Page
-                          <svg
-                            className="w-3 h-3"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                              strokeWidth={2}
-                            />
-                          </svg>
-                        </a>
+                        </span>
                       </div>
                     )}
                   </div>
+
+                  {/* প্রিমিয়াম না হলে যে ওভারলে মেসেজটি দেখাবে */}
+                  {!isPremium && (
+                    <div className="absolute inset-x-0 bottom-4 top-4 z-10 flex flex-col items-center justify-center bg-zinc-950/20 px-6 text-center">
+                      <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-[#B08D57]/20 text-[#B08D57]">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                      </div>
+                      <p className="text-xs font-bold text-white uppercase tracking-wider">Premium Access Only</p>
+                      <p className="mt-1 text-[10px] text-zinc-400">Upgrade to view full judging notes and earnings.</p>
+                      <Link 
+                        href={user ? "/profile" : "/login"}
+                        className="mt-3 rounded bg-[#B08D57] px-3 py-1.5 text-[10px] font-bold text-black hover:bg-[#D4AF37] transition"
+                      >
+                        {user ? "Upgrade Now" : "Login to View"}
+                      </Link>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

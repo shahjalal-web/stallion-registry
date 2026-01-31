@@ -1,19 +1,20 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 "use client";
 
 import { ProgenyRow } from "@/types/stallion";
-import { useMemo, useState, useEffect } from "react";
-
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "../auth-context";
+import { useAuth } from "@/app/auth-context";
 
-type Breed = "Quarter Horse" | "Paint" | "Appaloosa";
-type SemenAvailability = "Fresh" | "Chilled" | "Frozen" | "Combination";
 type Guarantee = "LFG" | "Colour" | "None";
-type StallionStatus = "Active" | "Deceased";
+type StallionStatus =
+  | "Active"
+  | "Deceased"
+  | "Standing"
+  | "Not Standing"
+  | "Historical Reference";
 
 type PerformanceRow = {
   year: string;
@@ -113,85 +114,106 @@ function SectionCard({
   );
 }
 
-// --- Main Page Component ---
-export default function SubmitStallionPage() {
+export default function UpdateStallionPage() {
+  const { id } = useParams();
   const { user } = useAuth();
-  const [showAuthModal, setShowAuthModal] = useState(false);
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
-  const [hasActiveSubscription] = useState(true);
-
-  const [progenyRows, setProgenyRows] = useState<ProgenyRow[]>([
-    {
-      name: "",
-      year: "",
-      association: "",
-      discipline: "",
-      result: "",
-      reference: "",
-    },
-  ]);
-
-  // 1. Core Identity
+  // --- Form States ---
   const [status, setStatus] = useState<StallionStatus>("Active");
   const [registeredName, setRegisteredName] = useState("");
-  const [countryOfStanding, setCountryOfStanding] = useState("United States");
+  const [countryOfStanding, setCountryOfStanding] = useState("");
   const [yearOfBirth, setYearOfBirth] = useState("");
   const [height, setHeight] = useState("");
-
-  // 2. Registry (Pedigree removed as per client request)
   const [registrationNumber, setRegistrationNumber] = useState("");
   const [officialRegistryLink, setOfficialRegistryLink] = useState("");
-
-  // 3. Breeding & Stats
   const [studFee, setStudFee] = useState("");
   const [guarantee, setGuarantee] = useState<Guarantee>("None");
   const [breedingStats, setBreedingStats] = useState("");
-
-  // 4. Testing
   const [diseaseTesting, setDiseaseTesting] = useState("");
   const [colourTesting, setColourTesting] = useState("");
-
-  // 5. Performance
-  const [performanceRows, setPerformanceRows] = useState<PerformanceRow[]>([
-    { year: "", event: "", discipline: "", result: "", reference: "" },
-  ]);
-
-  // 6. Media (Limited to 1 hero + 3 gallery)
   const [primaryImageUrl, setPrimaryImageUrl] = useState("");
   const [galleryUrls, setGalleryUrls] = useState(["", "", ""]);
   const [videoUrl, setVideoUrl] = useState("");
+  const [performanceRows, setPerformanceRows] = useState<PerformanceRow[]>([]);
+  const [progenyRows, setProgenyRows] = useState<ProgenyRow[]>([]);
 
+  // ১. ডেটা লোড করার লজিক
   useEffect(() => {
-    if (!user) {
-      setShowAuthModal(true);
-      // মডাল ওপেন থাকলে ব্যাকগ্রাউন্ড স্ক্রল বন্ধ রাখবে
-      document.body.style.overflow = "hidden";
-    } else {
-      setShowAuthModal(false);
-      document.body.style.overflow = "unset";
+    if (user && id) {
+      const existingData = user.registeredStallions?.find(
+        (s: any) => s.id === id,
+      );
+      if (existingData) {
+        setStatus(existingData.status);
+        setRegisteredName(existingData.registeredName);
+        setCountryOfStanding(existingData.countryOfStanding);
+        setYearOfBirth(existingData.yearOfBirth);
+        setHeight(existingData.height);
+        setRegistrationNumber(existingData.registrationNumber);
+        setOfficialRegistryLink(existingData.officialRegistryLink);
+        setStudFee(existingData.studFee);
+        setGuarantee(existingData.guarantee);
+        setBreedingStats(existingData.breedingStats);
+        setDiseaseTesting(existingData.diseaseTesting);
+        setColourTesting(existingData.colourTesting);
+        setPrimaryImageUrl(existingData.media?.primaryImageUrl || "");
+        setGalleryUrls(existingData.media?.galleryUrls || ["", "", ""]);
+        setVideoUrl(existingData.media?.videoUrl || "");
+        setPerformanceRows(existingData.performanceRows || []);
+        setProgenyRows(existingData.progenyRows || []);
+        setLoading(false);
+      } else {
+        router.push("/profile");
+      }
     }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [user]);
+  }, [id, user]);
 
-  const removePerformanceRow = (index: any) => {
-    const newRows = performanceRows.filter((_, i) => i !== index);
-    setPerformanceRows(newRows);
+  // ২. আপডেট হ্যান্ডলার
+  const handleUpdate = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+
+    const currentUsers = JSON.parse(localStorage.getItem("users") || "[]");
+    const userIdx = currentUsers.findIndex((u: any) => u.email === user.email);
+
+    if (userIdx !== -1) {
+      const updatedStallion = {
+        id,
+        registeredName,
+        status,
+        countryOfStanding,
+        yearOfBirth,
+        height,
+        registrationNumber,
+        officialRegistryLink,
+        studFee,
+        guarantee,
+        breedingStats,
+        diseaseTesting,
+        colourTesting,
+        performanceRows,
+        progenyRows,
+        media: { primaryImageUrl, galleryUrls, videoUrl },
+        updatedAt: new Date().toISOString(),
+      };
+
+      const updatedList = user.registeredStallions.map((s: any) =>
+        s.id === id ? updatedStallion : s,
+      );
+      const updatedUser = { ...user, registeredStallions: updatedList };
+
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+      currentUsers[userIdx].registeredStallions = updatedList;
+      localStorage.setItem("users", JSON.stringify(currentUsers));
+
+      alert("Changes saved successfully!");
+      router.push("/profile");
+    }
   };
 
-  // Validation
-  const errors = useMemo(() => {
-    const e: Record<string, string> = {};
-    if (!registeredName.trim()) e.registeredName = "Required";
-    if (!registrationNumber.trim()) e.registrationNumber = "Required";
-    if (!diseaseTesting.trim())
-      e.diseaseTesting = "Note & result file required";
-    return e;
-  }, [registeredName, registrationNumber, diseaseTesting]);
-
-  const canSubmit = hasActiveSubscription && Object.keys(errors).length === 0;
-
+  // --- Row Helpers ---
   const updatePerformanceRow = (
     idx: number,
     key: keyof PerformanceRow,
@@ -200,24 +222,6 @@ export default function SubmitStallionPage() {
     setPerformanceRows((prev) =>
       prev.map((row, i) => (i === idx ? { ...row, [key]: value } : row)),
     );
-  };
-
-  const addProgenyRow = () => {
-    setProgenyRows((prev) => [
-      ...prev,
-      {
-        name: "",
-        year: "",
-        association: "",
-        discipline: "",
-        result: "",
-        reference: "",
-      },
-    ]);
-  };
-
-  const removeProgenyRow = (idx: number) => {
-    setProgenyRows((prev) => prev.filter((_, i) => i !== idx));
   };
 
   const updateProgenyRow = (
@@ -230,81 +234,32 @@ export default function SubmitStallionPage() {
     );
   };
 
-  // SubmitStallionPage কম্পোনেন্টের ভেতরে এই ফাংশনটি যোগ করো
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!canSubmit) {
-      alert("Please complete all required fields.");
-      return;
-    }
-
-    // ১. নতুন ঘোড়ার অবজেক্ট তৈরি (প্রোফাইল পেজের ফরম্যাটে)
-    const newStallion = {
-      id: Date.now().toString(), // ইউনিক আইডি জেনারেট করা
-      registeredName,
-      status,
-      countryOfStanding,
-      yearOfBirth,
-      height,
-      registrationNumber,
-      officialRegistryLink,
-      studFee,
-      guarantee,
-      breedingStats,
-      diseaseTesting,
-      colourTesting,
-      performanceRows,
-      progenyRows,
-      media: {
-        primaryImageUrl,
-        galleryUrls,
-        videoUrl,
-      },
-      submittedAt: new Date().toISOString(),
-    };
-
-    // ২. লোকাল স্টোরেজ থেকে সব ইউজারদের ডেটা আনা
-    const currentUsers = JSON.parse(localStorage.getItem("users") || "[]");
-    const currentUserIndex = currentUsers.findIndex(
-      (u: any) => u.email === user?.email,
+  if (loading)
+    return (
+      <div className="text-center py-20 text-zinc-500">
+        Loading Stallion Data...
+      </div>
     );
 
-    if (currentUserIndex !== -1 && user) {
-      // ৩. ইউজারের registeredStallions লিস্ট আপডেট করা
-      const updatedUser = {
-        ...user,
-        registeredStallions: [...(user.registeredStallions || []), newStallion],
-      };
-
-      // ৪. Context এবং LocalStorage আপডেট করা
-      // এখানে সরাসরি LocalStorage আপডেট করছি যেহেতু Context এর জন্য আলাদা ফাংশন লিখিনি
-      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-
-      currentUsers[currentUserIndex].registeredStallions =
-        updatedUser.registeredStallions;
-      localStorage.setItem("users", JSON.stringify(currentUsers));
-
-      alert(
-        "Stallion submitted successfully! It is now visible in your profile.",
-      );
-      window.location.href = "/profile"; // প্রোফাইল পেজে রিডাইরেক্ট
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-black p-6 text-zinc-100">
-      <header className="mb-8">
-        <h1 className="text-2xl font-bold text-white tracking-tight">
-          Stallion Registration Request
-        </h1>
-        <p className="text-zinc-400 text-sm">
-          Please fill out the form below to register your stallion.
-        </p>
+    <div className="min-h-screen bg-black p-6 text-zinc-100 pb-20">
+      <header className="mb-8 max-w-5xl mx-auto flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">
+            Update Stallion Record
+          </h1>
+          <p className="text-zinc-400 text-sm">Editing: {registeredName}</p>
+        </div>
+        <Link
+          href="/profile"
+          className="text-xs font-bold text-zinc-500 hover:text-white transition"
+        >
+          Cancel & Exit
+        </Link>
       </header>
 
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-5xl">
-        {/* BLOCK 1: STATUS & CORE */}
+      <form onSubmit={handleUpdate} className="space-y-6 max-w-5xl mx-auto">
+        {/* BLOCK 1: IDENTITY */}
         <SectionCard
           title="Stallion Identity"
           subtitle="Basic information and current status."
@@ -329,7 +284,7 @@ export default function SubmitStallionPage() {
               <Input
                 value={registeredName}
                 onChange={(e) => setRegisteredName(e.target.value)}
-                placeholder="Full Name"
+                required
               />
             </div>
             <div>
@@ -345,7 +300,6 @@ export default function SubmitStallionPage() {
                 <Input
                   value={yearOfBirth}
                   onChange={(e) => setYearOfBirth(e.target.value)}
-                  placeholder="YYYY"
                 />
               </div>
               <div>
@@ -353,14 +307,13 @@ export default function SubmitStallionPage() {
                 <Input
                   value={height}
                   onChange={(e) => setHeight(e.target.value)}
-                  placeholder="HH"
                 />
               </div>
             </div>
           </div>
         </SectionCard>
 
-        {/* BLOCK 2: REGISTRY & PAPERS */}
+        {/* BLOCK 2: REGISTRY */}
         <SectionCard
           title="Official Registry"
           subtitle="Verified via registration papers."
@@ -371,7 +324,6 @@ export default function SubmitStallionPage() {
               <Input
                 value={officialRegistryLink}
                 onChange={(e) => setOfficialRegistryLink(e.target.value)}
-                placeholder="https://..."
               />
             </div>
             <div>
@@ -382,15 +334,13 @@ export default function SubmitStallionPage() {
               />
             </div>
             <div className="sm:col-span-2">
-              <FieldLabel>
-                Upload Registration Papers * (Pedigree verification)
-              </FieldLabel>
-              <FileUpload label="Upload PDF or Image" required />
+              <FieldLabel>Update Registration Papers (Optional)</FieldLabel>
+              <FileUpload label="Upload new PDF or Image if changed" />
             </div>
           </div>
         </SectionCard>
 
-        {/* BLOCK 3: PERFORMANCE RECORD */}
+        {/* BLOCK 3: PERFORMANCE */}
         <SectionCard
           title="Performance Record"
           subtitle="Include details, judges, and earnings."
@@ -401,16 +351,18 @@ export default function SubmitStallionPage() {
                 key={idx}
                 className="relative rounded-lg border border-zinc-800 bg-zinc-900/30 p-4 space-y-3"
               >
-                {/* Remove Button - ওপরের ডান কোণায় */}
                 <button
                   type="button"
-                  onClick={() => removePerformanceRow(idx)}
-                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-red-900/80 text-white text-xs flex items-center justify-center hover:bg-red-700 transition-colors border border-red-500"
+                  onClick={() =>
+                    setPerformanceRows(
+                      performanceRows.filter((_, i) => i !== idx),
+                    )
+                  }
+                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-red-900 text-white text-xs border border-red-500"
                 >
                   ✕
                 </button>
-
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                <div className="grid gap-3 lg:grid-cols-5">
                   <Input
                     value={row.year}
                     onChange={(e) =>
@@ -441,7 +393,6 @@ export default function SubmitStallionPage() {
                     placeholder="Ref URL"
                   />
                 </div>
-
                 <div className="grid gap-3 sm:grid-cols-3">
                   <Input
                     value={row.notes}
@@ -467,7 +418,6 @@ export default function SubmitStallionPage() {
                 </div>
               </div>
             ))}
-
             <button
               type="button"
               onClick={() =>
@@ -485,14 +435,14 @@ export default function SubmitStallionPage() {
                   },
                 ])
               }
-              className="text-xs text-[#b08d57] hover:underline flex items-center gap-1"
+              className="text-xs text-[#b08d57] hover:underline"
             >
-              + Add Performance Row
+              + Add Row
             </button>
           </div>
         </SectionCard>
 
-        {/* BLOCK 4: NOTABLE PROGENY */}
+        {/* BLOCK 4: PROGENY */}
         <SectionCard
           title="Notable Progeny"
           subtitle="List notable offspring and their achievements."
@@ -503,9 +453,18 @@ export default function SubmitStallionPage() {
                 key={idx}
                 className="relative rounded-lg border border-zinc-800 bg-zinc-950 p-4"
               >
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setProgenyRows(progenyRows.filter((_, i) => i !== idx))
+                  }
+                  className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-red-900 text-white text-xs border border-red-500"
+                >
+                  ✕
+                </button>
+                <div className="grid gap-3 lg:grid-cols-3">
                   <Input
-                    placeholder="Progeny name"
+                    placeholder="Name"
                     value={row.name}
                     onChange={(e) =>
                       updateProgenyRow(idx, "name", e.target.value)
@@ -540,204 +499,131 @@ export default function SubmitStallionPage() {
                     }
                   />
                   <Input
-                    placeholder="Reference link"
+                    placeholder="Reference"
                     value={row.reference}
                     onChange={(e) =>
                       updateProgenyRow(idx, "reference", e.target.value)
                     }
                   />
                 </div>
-
-                <div className="mt-3 flex justify-end">
-                  <button
-                    type="button"
-                    onClick={() => removeProgenyRow(idx)}
-                    className="text-xs text-red-400 hover:underline"
-                  >
-                    Remove
-                  </button>
-                </div>
               </div>
             ))}
-
             <button
               type="button"
-              onClick={addProgenyRow}
-              className="rounded-md border border-[#D4AF37] px-3 py-2 text-sm text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all"
+              onClick={() =>
+                setProgenyRows([
+                  ...progenyRows,
+                  {
+                    name: "",
+                    year: "",
+                    association: "",
+                    discipline: "",
+                    result: "",
+                    reference: "",
+                  },
+                ])
+              }
+              className="text-xs text-[#b08d57] hover:underline"
             >
-              + Add progeny row
+              + Add Progeny Row
             </button>
           </div>
         </SectionCard>
 
-        {/* ২. BLOCK 4: BREEDING (এখান থেকে Notable Progeny Textarea বাদ দেওয়া হয়েছে) */}
+        {/* BLOCK 5: BREEDING */}
         <SectionCard
           title="Breeding Information"
-          subtitle="Stud fees and basic statistics."
+          subtitle="Stud fees and statistics."
         >
           <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <FieldLabel>Stud Fee (Reference) $ AUD/USD/EUR</FieldLabel>
-              <Input
-                value={studFee}
-                onChange={(e) => setStudFee(e.target.value)}
-                placeholder="e.g. 1750 USD"
-              />
-            </div>
-            <div>
-              <FieldLabel>Guarantee</FieldLabel>
-              <Select
-                value={guarantee}
-                onChange={(e) => setGuarantee(e.target.value as Guarantee)}
-              >
-                <option value="None">None</option>
-                <option value="LFG">LFG</option>
-                <option value="Colour">Colour</option>
-              </Select>
-            </div>
-
-            {/* Notable Progeny Textarea টি এখান থেকে সরিয়ে ফেলা হয়েছে */}
-
+            <Input
+              value={studFee}
+              onChange={(e) => setStudFee(e.target.value)}
+              placeholder="Stud Fee (e.g. 1750 USD)"
+            />
+            <Select
+              value={guarantee}
+              onChange={(e) => setGuarantee(e.target.value as any)}
+            >
+              <option value="None">None</option>
+              <option value="LFG">LFG</option>
+              <option value="Colour">Colour</option>
+            </Select>
             <div className="sm:col-span-2">
-              <FieldLabel>Breeding Statistics</FieldLabel>
               <Textarea
                 value={breedingStats}
                 onChange={(e) => setBreedingStats(e.target.value)}
-                placeholder="Foal counts, point earners, etc."
+                placeholder="Breeding statistics..."
                 rows={3}
               />
             </div>
           </div>
         </SectionCard>
 
-        {/* BLOCK 5: TESTING */}
+        {/* BLOCK 6: TESTING */}
         <SectionCard
           title="Health Testing"
-          subtitle="Compulsory disease panel results."
+          subtitle="Disease and colour testing."
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <FieldLabel>Disease Testing (Compulsory) *</FieldLabel>
               <Textarea
                 value={diseaseTesting}
                 onChange={(e) => setDiseaseTesting(e.target.value)}
-                placeholder="e.g. 5-panel N/N"
+                placeholder="Disease Testing"
                 rows={2}
               />
-              <FileUpload label="Upload Disease Results" required />
+              <FileUpload label="Update Disease File" />
             </div>
             <div>
-              <FieldLabel>Colour Testing (Optional)</FieldLabel>
               <Textarea
                 value={colourTesting}
                 onChange={(e) => setColourTesting(e.target.value)}
-                placeholder="e.g. E/E, a/a"
+                placeholder="Colour Testing"
                 rows={2}
               />
-              <FileUpload label="Upload Colour Results" />
+              <FileUpload label="Update Colour File" />
             </div>
           </div>
         </SectionCard>
 
-        {/* BLOCK 6: MEDIA */}
-        <SectionCard title="Media" subtitle="Maximum 4 photos and 1 video.">
-          <div className="space-y-4">
-            <div>
-              <FieldLabel>Primary Hero Image URL *</FieldLabel>
+        {/* BLOCK 7: MEDIA */}
+        <SectionCard title="Media" subtitle="Max 4 photos and 1 video.">
+          <Input
+            value={primaryImageUrl}
+            onChange={(e) => setPrimaryImageUrl(e.target.value)}
+            placeholder="Primary Hero URL"
+          />
+          <div className="grid gap-4 sm:grid-cols-3 mt-4">
+            {galleryUrls.map((url, i) => (
               <Input
-                value={primaryImageUrl}
-                onChange={(e) => setPrimaryImageUrl(e.target.value)}
-                placeholder="https://..."
+                key={i}
+                value={url}
+                onChange={(e) => {
+                  const newUrls = [...galleryUrls];
+                  newUrls[i] = e.target.value;
+                  setGalleryUrls(newUrls);
+                }}
+                placeholder={`Gallery Image ${i + 1}`}
               />
-            </div>
-            <div className="grid gap-4 sm:grid-cols-3">
-              {galleryUrls.map((url, i) => (
-                <div key={i}>
-                  <FieldLabel>Gallery Image {i + 1}</FieldLabel>
-                  <Input
-                    value={url}
-                    onChange={(e) => {
-                      const newUrls = [...galleryUrls];
-                      newUrls[i] = e.target.value;
-                      setGalleryUrls(newUrls);
-                    }}
-                    placeholder="Optional"
-                  />
-                </div>
-              ))}
-            </div>
-            <div>
-              <FieldLabel>Video Reference URL</FieldLabel>
-              <Input
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                placeholder="YouTube/Vimeo"
-              />
-            </div>
+            ))}
+          </div>
+          <div className="mt-4">
+            <Input
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              placeholder="Video URL"
+            />
           </div>
         </SectionCard>
 
         <button
           type="submit"
-          disabled={!canSubmit}
-          className="w-full rounded-md border border-[#b08d57] py-4 font-bold text-white transition-all hover:bg-[#b08d57] hover:text-black disabled:opacity-20 disabled:cursor-not-allowed"
+          className="w-full rounded-md bg-[#b08d57] py-4 font-bold text-black hover:bg-[#d4af37] transition shadow-lg shadow-[#b08d57]/20"
         >
-          Submit Stallion for Review
+          Save and Update Stallion
         </button>
       </form>
-
-      {/* --- AUTH REQUIRED MODAL --- */}
-      {showAuthModal && (
-        <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
-          <div className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-950 p-8 shadow-2xl text-center">
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#b08d57]/10 text-[#b08d57]">
-              <svg
-                className="h-10 w-10"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                />
-              </svg>
-            </div>
-
-            <h2 className="text-2xl font-bold text-white tracking-tight">
-              Login Required
-            </h2>
-            <p className="mt-4 text-zinc-400 leading-relaxed">
-              You must be logged in to access the Stallion Registration form.
-              Please sign in to your account to continue.
-            </p>
-
-            <div className="mt-8 flex flex-col gap-3">
-              <Link
-                href="/login"
-                className="w-full rounded-xl bg-[#b08d57] py-3 text-sm font-bold text-black transition-all hover:bg-[#d4af37]"
-              >
-                Login to My Account
-              </Link>
-              <Link
-                href="/signup"
-                className="w-full rounded-xl border border-zinc-800 bg-zinc-900 py-3 text-sm font-bold text-zinc-300 transition-all hover:bg-zinc-800"
-              >
-                Create New Account
-              </Link>
-            </div>
-
-            <Link
-              href="/stallions"
-              className="mt-6 inline-block text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
-            >
-              ← Back to Directory
-            </Link>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

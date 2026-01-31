@@ -1,4 +1,4 @@
-/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
@@ -6,6 +6,7 @@ import { useState } from "react";
 import type { Stallion } from "@/types/stallion";
 import { formatHeight } from "../../lib/utils";
 import FoundingBadge from "./FoundingBadge";
+import { useAuth } from "@/app/auth-context";
 
 function Label({ children }: { children: React.ReactNode }) {
   return <p className="text-[11px] font-medium text-zinc-400">{children}</p>;
@@ -15,9 +16,23 @@ function Value({ children }: { children: React.ReactNode }) {
 }
 
 export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
+  const { user, toggleFavorite } = useAuth(); // Auth Context থেকে ডেটা নেয়া
   const owner = stallion.owners?.[0];
   const [showPedigree, setShowPedigree] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // মডাল কন্ট্রোল করার জন্য স্টেট
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // চেক করবে stallion টি কি ইউজারের ফেভারিট লিস্টে আছে?
+  const isFavorited = user?.favorites?.some((f: any) => f.id === stallion.id);
+
+  const handleFavoriteClick = () => {
+    if (!user) {
+      // ইউজার লগইন না থাকলে মডাল দেখাবে
+      setIsModalOpen(true);
+    } else {
+      // ইউজার লগইন থাকলে ফেভারিট টগল হবে (লোকাল স্টোরেজে সেভ হবে)
+      toggleFavorite(stallion);
+    }
+  };
 
   return (
     <section className="rounded-xl border border-zinc-800 bg-zinc-950 p-6 shadow-lg shadow-black/30">
@@ -36,17 +51,20 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
           </div>
 
           <div className="flex items-center justify-between gap-2 border-t border-zinc-800 pt-3">
-            {/* Favourite Button - Redesigned as a "Tease" */}
+            {/* Favourite Toggle Button */}
             <div className="group relative flex-1">
               <button
                 type="button"
-                onClick={() => setIsModalOpen(true)} // ক্লিক করলে মডাল ওপেন হবে
-                className="flex w-full items-center justify-center gap-2 rounded-md border border-zinc-800 bg-zinc-900/50 px-3 py-2 text-xs font-semibold text-zinc-500 transition-all group-hover:border-zinc-700"
+                onClick={handleFavoriteClick}
+                className={`flex w-full items-center justify-center gap-2 rounded-md border px-3 py-2 text-xs font-semibold transition-all ${
+                  isFavorited 
+                    ? "border-red-500/50 bg-red-500/10 text-red-500" 
+                    : "border-zinc-800 bg-zinc-900/50 text-zinc-500 group-hover:border-zinc-700 hover:text-zinc-300"
+                }`}
               >
-                {/* Heart Icon (Outline) */}
+                {/* Heart Icon Toggle Logic */}
                 <svg
-                  className="h-4 w-4"
-                  fill="none"
+                  className={`h-4 w-4 transition-colors ${isFavorited ? "fill-current" : "fill-none"}`}
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -57,16 +75,18 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                   />
                 </svg>
-                Save to favourites
+                {isFavorited ? "Saved" : "Save to favourites"}
               </button>
 
-              {/* Hover Tooltip/Message (Tease Feature) */}
-              <div className="absolute bottom-full left-1/2 mb-2 w-48 -translate-x-1/2 scale-95 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100">
-                <div className="rounded bg-[#b08d57] px-2 py-1 text-[10px] font-bold text-black shadow-xl text-center">
-                  Registration coming soon!
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#b08d57]" />
+              {/* Tooltip only for non-logged users */}
+              {!user && (
+                <div className="absolute bottom-full left-1/2 mb-2 w-48 -translate-x-1/2 scale-95 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100">
+                  <div className="rounded bg-[#b08d57] px-2 py-1 text-[10px] font-bold text-black shadow-xl text-center">
+                    Login to save favorites!
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#b08d57]" />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Founding Member Badge */}
@@ -112,7 +132,7 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
                 <div className="text-sm">
                   <Value>
                     {stallion.pedigree.sire?.name}
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-zinc-500">
                       {" "}
                       ({stallion.pedigree.sire?.sire?.name} ×{" "}
                       {stallion.pedigree.sire?.dam?.name})
@@ -121,7 +141,7 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
                     ×
                     <br />
                     {stallion.pedigree.dam?.name}
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-zinc-500">
                       {" "}
                       ({stallion.pedigree.dam?.sire?.name} ×{" "}
                       {stallion.pedigree.dam?.dam?.name})
@@ -129,7 +149,6 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
                   </Value>
                 </div>
 
-                {/* 🔽 EXTENDED PEDIGREE TOGGLE */}
                 <button
                   onClick={() => setShowPedigree(!showPedigree)}
                   className="mt-2 text-xs text-[#b08d57] hover:underline"
@@ -141,31 +160,20 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
 
                 {showPedigree && (
                   <div className="mt-3 grid gap-2 text-xs text-zinc-300 sm:grid-cols-2">
-                    {/* Sire Line - দাদাকুল */}
                     <p>
-                      <span className="text-zinc-500">
-                        Grandsire (Sire line):{" "}
-                      </span>
+                      <span className="text-zinc-500">Grandsire (Sire line): </span>
                       {stallion.pedigree.sire?.sire?.name || "—"}
                     </p>
                     <p>
-                      <span className="text-zinc-500">
-                        Granddam (Sire line):{" "}
-                      </span>
+                      <span className="text-zinc-500">Granddam (Sire line): </span>
                       {stallion.pedigree.sire?.dam?.name || "—"}
                     </p>
-
-                    {/* Dam Line - নানাকুল */}
                     <p>
-                      <span className="text-zinc-500">
-                        Grandsire (Dam line):{" "}
-                      </span>
+                      <span className="text-zinc-500">Grandsire (Dam line): </span>
                       {stallion.pedigree.dam?.sire?.name || "—"}
                     </p>
                     <p>
-                      <span className="text-zinc-500">
-                        Granddam (Dam line):{" "}
-                      </span>
+                      <span className="text-zinc-500">Granddam (Dam line): </span>
                       {stallion.pedigree.dam?.dam?.name || "—"}
                     </p>
                   </div>
@@ -204,12 +212,11 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
 
       {/* --- COMING SOON MODAL --- */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
           <div 
             className="relative w-full max-w-sm rounded-2xl border border-zinc-800 bg-zinc-950 p-8 shadow-2xl animate-in zoom-in-95 duration-300"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
             <button 
               onClick={() => setIsModalOpen(false)}
               className="absolute right-5 top-5 text-zinc-500 hover:text-white transition-colors"
@@ -224,9 +231,9 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
                 </svg>
               </div>
               
-              <h3 className="text-xl font-bold text-white tracking-tight">Feature Coming Soon!</h3>
+              <h3 className="text-xl font-bold text-white tracking-tight">Login Required</h3>
               <p className="mt-4 text-sm text-zinc-400 leading-relaxed">
-                We are currently building our member portal. Once the registration system is live, you'll be able to login and save your favourite stallions.
+                You need to be logged in to save stallions to your personal favorites list.
               </p>
               
               <button
@@ -237,7 +244,6 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
               </button>
             </div>
           </div>
-          {/* ব্যাকড্রপে ক্লিক করলে মডাল বন্ধ হবে */}
           <div className="absolute inset-0 -z-10 h-full w-full" onClick={() => setIsModalOpen(false)} />
         </div>
       )}
