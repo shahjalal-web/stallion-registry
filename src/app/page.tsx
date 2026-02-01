@@ -3,68 +3,73 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <div className="space-y-10">
-      <header className="space-y-4">
-        <p className="text-xs font-medium tracking-wide text-(--gold)">
-          WESTERN PERFORMANCE HORSE REGISTRY
+      <header className="space-y-6">
+        {/* Banner text from Image 3 */}
+        <p className="text-xs font-medium tracking-wide text-zinc-400">
+          Now onboarding founding stallions – registry visibility ahead of full launch.
         </p>
 
-        <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-          Leading Sires Registry
-        </h1>
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+            Performance Stallion Breeding Registry
+          </h1>
+          <p className="text-lg font-medium text-zinc-300">
+            Pedigree | Performance | Breeding Information
+          </p>
+        </div>
 
-        <p className="max-w-2xl text-sm leading-6 text-(--text-muted)">
-          A data-driven reference platform presenting stallion records in a
-          structured, factual and standardised format. Designed to support
-          trust, comparison, and long-term extensibility.
+        {/* Intro text from Image 3 */}
+        <div className="max-w-2xl space-y-4 text-sm leading-6 text-zinc-400">
+          <p>
+            Leading Sires is a performance-focused sire registry created for breeders and horsemen who value proven working genetics.
+          </p>
+          <p>
+            Each stallion is presented on a single reference page that consolidates pedigree, performance and breeding information, supported by official association records and ranch or farm websites, creating a transparent, verifiable resource for serious breeders and programs.
+          </p>
+        </div>
+
+        {/* Breed tags from Image 3 */}
+        <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500">
+          Quarter Horses | Paints | Appaloosas
         </p>
 
-        <div className="flex flex-wrap gap-3 pt-3">
+        {/* Action buttons from Image 3 & 4 */}
+        <div className="flex flex-wrap gap-4 pt-4">
           <Link
             href="/stallions"
-            className="rounded-md border border-[#b08d57] px-4 py-2 text-sm font-medium text-[#b08d57] transition hover:bg-[#b08d57] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex-1 sm:flex-none text-center rounded-none border border-white px-8 py-4 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-white hover:text-black"
           >
-            Browse Stallion Directory
+            Stallion Directory
           </Link>
 
           <Link
-            href="/about"
-            className="rounded-md border border-[#b08d57] px-4 py-2 text-sm font-medium text-[#b08d57] transition hover:bg-[#b08d57] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed"
+            href="/submit-stallion"
+            className="flex-1 sm:flex-none text-center rounded-none border border-white px-8 py-4 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-white hover:text-black"
           >
-            About the Registry
+            Submit a Stallion Listing
           </Link>
         </div>
       </header>
 
-      <hr className="border-t border-(--gold-soft)" />
+      <hr className="border-t border-zinc-800" />
 
-      <section className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border border-(--gold-soft) bg-(--bg-surface) p-5">
-          <p className="text-sm font-semibold text-white">
-            Registry-grade presentation
-          </p>
-          <p className="mt-2 text-sm text-(--text-muted)">
-            No marketing visuals. Strong hierarchy, readability and consistent
-            formatting.
+      {/* নিচের সেকশনগুলো ইমেজ ২ এবং ৫ এর কন্টেন্ট অনুযায়ী সাজানো হয়েছে */}
+      <section className="grid gap-8 md:grid-cols-2">
+        <div className="space-y-3">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-white">
+            Pedigree and Historical Records
+          </h2>
+          <p className="text-sm leading-relaxed text-zinc-400">
+            The registry preserves pedigree and lineage information for stallions regardless of current standing status. Deceased stallions and historically significant sires may be included for pedigree reference and research purposes.
           </p>
         </div>
 
-        <div className="rounded-xl border border-(--gold-soft) bg-(--bg-surface) p-5">
-          <p className="text-sm font-semibold text-white">
-            Structured data blocks
-          </p>
-          <p className="mt-2 text-sm text-(--text-muted)">
-            Profiles are rendered from structured data using reusable
-            components.
-          </p>
-        </div>
-
-        <div className="rounded-xl border border-(--gold-soft) bg-(--bg-surface) p-5">
-          <p className="text-sm font-semibold text-white">
-            Extensible architecture
-          </p>
-          <p className="mt-2 text-sm text-(--text-muted)">
-            Supabase auth/database and Stripe billing assumed later (not part of
-            Phase-1).
+        <div className="space-y-3">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-white">
+            International Scope
+          </h2>
+          <p className="text-sm leading-relaxed text-zinc-400">
+            The Leading Sires Registry support owners and farms across Australia, New Zealand, Canada, North and South America and Europe. Listings are presented in a consistent, non-commercial format.
           </p>
         </div>
       </section>

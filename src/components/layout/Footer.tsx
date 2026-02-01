@@ -2,49 +2,105 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-zinc-400 text-sm border-t border-[#6b5736]">
+    <footer className="bg-black text-zinc-400 text-sm border-t border-zinc-800">
       <div className="mx-auto max-w-6xl px-6 py-12 grid gap-10 md:grid-cols-3">
-
-        <div>
-          <p className="text-white font-semibold">Leading Sires Registry</p>
-          <p>Performance stallion reference platform</p>
-          <p className="mt-3 text-zinc-500">
-            Quarter Horses | Paints | Appaloosas <br />
-            Australia | New Zealand | Europe | Canada | North & South America
-          </p>
+        {/* Brand Section - Content from Image 4 */}
+        <div className="space-y-4">
+          <div>
+            <p className="text-white font-semibold">Leading Sires Registry</p>
+            <p className="text-xs">Performance stallion reference platform</p>
+          </div>
+          <div className="text-[11px] text-zinc-500 leading-relaxed uppercase tracking-wider">
+            <p>Quarter Horses | Paints | Appaloosas</p>
+            <p>
+              Australia | New Zealand | Europe | Canada | North & South America
+            </p>
+          </div>
         </div>
 
-        <div className="space-y-2">
-          <p className="text-white font-medium">Navigation</p>
-
-          <Link href="/stallions" className="block hover:text-[#b08d57]">Stallion Directory</Link>
-
-          <Link href="/" className="block hover:text-[#b08d57]">Owners</Link>
-
-          <Link href="/resources" className="block hover:text-[#b08d57]">Breeding Service Providers</Link>
-
-          <Link href="/pricing" className="block hover:text-[#b08d57]">Pricing</Link>
-
-          <Link href="/submit-stallion" className="block hover:text-[#b08d57]">Submit a Listing</Link>
-
-          <Link href="/about" className="block hover:text-[#b08d57]">About</Link>
-
-          <Link href="/" className="block hover:text-[#b08d57]">Contact</Link>
+        {/* Navigation Section - Updated Titles from Image 4 */}
+        <div className="flex flex-col space-y-2 text-xs uppercase tracking-widest text-center md:text-left">
+          <Link
+            href="/stallions"
+            className="hover:text-white transition-colors"
+          >
+            Stallion Directory
+          </Link>
+          <Link href="/" className="hover:text-white transition-colors">
+            Owners
+          </Link>
+          <Link
+            href="/"
+            className="hover:text-white transition-colors"
+          >
+            Breeding Service Providers
+          </Link>
+          <Link href="/pricing" className="hover:text-white transition-colors">
+            Pricing
+          </Link>
+          <Link
+            href="/submit-stallion"
+            className="hover:text-white transition-colors"
+          >
+            Submit a Listing
+          </Link>
+          <Link href="/about" className="hover:text-white transition-colors">
+            About
+          </Link>
+          <Link href="/" className="hover:text-white transition-colors">
+            Contact
+          </Link>
         </div>
 
-        <div>
-          <p className="text-white font-medium">Contact</p>
+        {/* Contact Section - Updated from Image 4 */}
+        <div className="md:text-right space-y-4">
           <a
             href="mailto:info@leadingsiresregistry.com"
-            className="hover:text-[#b08d57]"
+            className="text-xs hover:text-white transition-colors border-b border-transparent hover:border-white pb-1"
           >
             info@leadingsiresregistry.com
           </a>
+          <div className="flex justify-center md:justify-end">
+            {/* Link icon placeholder from image */}
+            <svg
+              className="w-4 h-4 text-zinc-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.828a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+              />
+            </svg>
+          </div>
         </div>
       </div>
 
-      <div className="border-t border-zinc-800 text-center text-xs py-4 text-zinc-500">
-        © {new Date().getFullYear()} Leading Sires Registry | All rights reserved | Terms of Use | Privacy Policy | Records may include active, historical, or deceased stallions for pedigree and reference purposes.
+      {/* Legal Section - Styled as per Image 4 */}
+      <div className="border-t border-zinc-900 px-6 py-6 text-center">
+        <div className="mx-auto max-w-6xl flex flex-col gap-4">
+          <p className="text-[10px] text-zinc-600 leading-relaxed">
+            © 2026 Leading Sires Registry | All rights reserved |
+            <Link
+              href="/"
+              className="hover:text-zinc-400 mx-1 underline underline-offset-2"
+            >
+              Terms of Use
+            </Link>{" "}
+            |
+            <Link
+              href="/"
+              className="hover:text-zinc-400 mx-1 underline underline-offset-2"
+            >
+              Privacy Policy
+            </Link>{" "}
+            | Records may include active, historical, or deceased stallions for
+            pedigree and reference purposes.
+          </p>
+        </div>
       </div>
     </footer>
   );

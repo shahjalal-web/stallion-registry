@@ -124,6 +124,17 @@ export default function Navbar() {
             </Link>
           )}
 
+          <Link
+            href="/about"
+            className={
+              isActive("/about")
+                ? "text-[#b08d57] border-b border-[#b08d57] pb-1"
+                : "text-zinc-400 hover:text-white"
+            }
+          >
+            About
+          </Link>
+
           {/* Auth Section: ডেস্কটপ ভিউ */}
           <div className="ml-4 flex items-center gap-4 border-l border-zinc-800 pl-4">
             {user ? (
@@ -205,6 +216,10 @@ export default function Navbar() {
                 Submit Stallion
               </Link>
             )}
+
+            <Link href="/about" className="text-zinc-300 hover:text-white">
+              About
+            </Link>
 
             {/* Mobile Auth */}
             <div className="mt-4 border-t border-zinc-800 pt-4 pb-2">
