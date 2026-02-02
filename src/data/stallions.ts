@@ -63,12 +63,12 @@ export const stallions: Stallion[] = [
       },
 
       extended: [
-    { label: "Sire’s grandsire", name: "Potential Investment" },
-    { label: "Sire’s granddam", name: "Hot Chocolate Chip" },
-    { label: "Dam’s grandsire", name: "Smart Little Lena" },
-    { label: "Dam’s granddam", name: "Docs Stylish Oak" },
-    { label: "Great grandsire (dam line)", name: "Doc Bar" },
-  ],
+        { label: "Sire’s grandsire", name: "Potential Investment" },
+        { label: "Sire’s granddam", name: "Hot Chocolate Chip" },
+        { label: "Dam’s grandsire", name: "Smart Little Lena" },
+        { label: "Dam’s granddam", name: "Docs Stylish Oak" },
+        { label: "Great grandsire (dam line)", name: "Doc Bar" },
+      ],
     },
 
     performanceRecords: [
@@ -239,16 +239,39 @@ export const stallions: Stallion[] = [
         dam: { name: "Zips Chocolate Chip" },
       },
     },
-
     performanceRecords: [
+      {
+        year: 2023,
+        event: "AQHA World Championship Show",
+        discipline: "Western Pleasure",
+        result: "World Champion",
+        reference: {
+          label: "View Official Results",
+          href: "https://show-results.example/aqha-world-2023",
+        },
+        notes: "Top score in the senior division.",
+        judges: "D. Smith, J. Jones, R. Williams",
+        earnings: "$5,000",
+        levelEarnings: {
+          value: 5000,
+          currency: "USD",
+        },
+      },
       {
         year: 2022,
         event: "Australian Paint Horse Nationals",
         discipline: "Hunter Under Saddle",
         result: "Champion",
         reference: {
-          label: "Published results",
+          label: "Published Results",
           href: "https://show-results.example/apha2022",
+        },
+        notes: "Won by unanimous decision under all three judges.",
+        judges: "Sarah Thompson",
+        earnings: "$2,500",
+        levelEarnings: {
+          value: 2500,
+          currency: "AUD",
         },
       },
       {
@@ -257,8 +280,15 @@ export const stallions: Stallion[] = [
         discipline: "Ranch Rail",
         result: "Reserve Champion",
         reference: {
-          label: "Published results",
+          label: "Show Record",
           href: "https://show-results.example/state2021",
+        },
+        notes: "High point earner in the amateur class.",
+        judges: "Michael Brown",
+        earnings: "$1,200",
+        levelEarnings: {
+          value: 1200,
+          currency: "AUD",
         },
       },
     ],

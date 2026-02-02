@@ -51,28 +51,8 @@ export default function HomePage() {
         </div>
       </header>
 
+      {/* ক্লায়েন্টের ইনস্ট্রাকশন অনুযায়ী নিচের সেকশনগুলো হোম পেজ থেকে সরিয়ে শুধুমাত্র একটি ডিভাইডার রাখা হয়েছে */}
       <hr className="border-t border-zinc-800" />
-
-      {/* নিচের সেকশনগুলো ইমেজ ২ এবং ৫ এর কন্টেন্ট অনুযায়ী সাজানো হয়েছে */}
-      <section className="grid gap-8 md:grid-cols-2">
-        <div className="space-y-3">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-white">
-            Pedigree and Historical Records
-          </h2>
-          <p className="text-sm leading-relaxed text-zinc-400">
-            The registry preserves pedigree and lineage information for stallions regardless of current standing status. Deceased stallions and historically significant sires may be included for pedigree reference and research purposes.
-          </p>
-        </div>
-
-        <div className="space-y-3">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-white">
-            International Scope
-          </h2>
-          <p className="text-sm leading-relaxed text-zinc-400">
-            The Leading Sires Registry support owners and farms across Australia, New Zealand, Canada, North and South America and Europe. Listings are presented in a consistent, non-commercial format.
-          </p>
-        </div>
-      </section>
     </div>
   );
 }
