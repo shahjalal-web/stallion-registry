@@ -7,6 +7,7 @@ import type { Stallion } from "@/types/stallion";
 import { formatHeight } from "../../lib/utils";
 import FoundingBadge from "./FoundingBadge";
 import { useAuth } from "@/app/auth-context";
+import Link from "next/link";
 
 function Label({ children }: { children: React.ReactNode }) {
   return <p className="text-[11px] font-medium text-zinc-400">{children}</p>;
@@ -57,8 +58,8 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
                 type="button"
                 onClick={handleFavoriteClick}
                 className={`flex w-full items-center justify-center gap-2 rounded-md border px-3 py-2 text-xs font-semibold transition-all ${
-                  isFavorited 
-                    ? "border-red-500/50 bg-red-500/10 text-red-500" 
+                  isFavorited
+                    ? "border-red-500/50 bg-red-500/10 text-red-500"
                     : "border-zinc-800 bg-zinc-900/50 text-zinc-500 group-hover:border-zinc-700 hover:text-zinc-300"
                 }`}
               >
@@ -161,19 +162,27 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
                 {showPedigree && (
                   <div className="mt-3 grid gap-2 text-xs text-zinc-300 sm:grid-cols-2">
                     <p>
-                      <span className="text-zinc-500">Grandsire (Sire line): </span>
+                      <span className="text-zinc-500">
+                        Grandsire (Sire line):{" "}
+                      </span>
                       {stallion.pedigree.sire?.sire?.name || "—"}
                     </p>
                     <p>
-                      <span className="text-zinc-500">Granddam (Sire line): </span>
+                      <span className="text-zinc-500">
+                        Granddam (Sire line):{" "}
+                      </span>
                       {stallion.pedigree.sire?.dam?.name || "—"}
                     </p>
                     <p>
-                      <span className="text-zinc-500">Grandsire (Dam line): </span>
+                      <span className="text-zinc-500">
+                        Grandsire (Dam line):{" "}
+                      </span>
                       {stallion.pedigree.dam?.sire?.name || "—"}
                     </p>
                     <p>
-                      <span className="text-zinc-500">Granddam (Dam line): </span>
+                      <span className="text-zinc-500">
+                        Granddam (Dam line):{" "}
+                      </span>
                       {stallion.pedigree.dam?.dam?.name || "—"}
                     </p>
                   </div>
@@ -210,14 +219,15 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
         </div>
       </div>
 
-      {/* --- COMING SOON MODAL --- */}
+      {/* --- AUTH REQUIRED MODAL --- */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-          <div 
+        <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+          <div
             className="relative w-full max-w-sm rounded-2xl border border-zinc-800 bg-zinc-950 p-8 shadow-2xl animate-in zoom-in-95 duration-300"
             onClick={(e) => e.stopPropagation()}
           >
-            <button 
+            {/* Close Button */}
+            <button
               onClick={() => setIsModalOpen(false)}
               className="absolute right-5 top-5 text-zinc-500 hover:text-white transition-colors"
             >
@@ -225,26 +235,53 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
             </button>
 
             <div className="text-center">
+              {/* Heart Icon from your provided snippet */}
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#b08d57]/10 text-[#b08d57]">
-                <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <svg
+                  className="h-8 w-8"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
                 </svg>
               </div>
-              
-              <h3 className="text-xl font-bold text-white tracking-tight">Login Required</h3>
+
+              <h3 className="text-xl font-bold text-white tracking-tight">
+                Save to Favorites
+              </h3>
               <p className="mt-4 text-sm text-zinc-400 leading-relaxed">
-                You need to be logged in to save stallions to your personal favorites list.
+                Join Leading Sires to create your personalized list of favorite
+                stallions and compare them later.
               </p>
-              
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="mt-8 w-full rounded-xl bg-[#b08d57] py-3 text-sm font-bold text-black transition-all hover:bg-[#d4af37]"
-              >
-                Got it, thanks!
-              </button>
+
+              <div className="mt-8 flex flex-col gap-3">
+                <Link
+                  href="/login"
+                  className="rounded-xl bg-[#b08d57] py-3 text-sm font-bold text-black text-center transition-all hover:bg-[#d4af37]"
+                >
+                  Login / Sign Up
+                </Link>
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="rounded-xl border border-zinc-800 bg-zinc-900 py-3 text-sm font-bold text-zinc-300 transition-all hover:bg-zinc-800"
+                >
+                  Not Now
+                </button>
+              </div>
             </div>
           </div>
-          <div className="absolute inset-0 -z-10 h-full w-full" onClick={() => setIsModalOpen(false)} />
+
+          {/* Backdrop click to close */}
+          <div
+            className="absolute inset-0 -z-10 h-full w-full"
+            onClick={() => setIsModalOpen(false)}
+          />
         </div>
       )}
     </section>
