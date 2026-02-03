@@ -3,16 +3,29 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "../auth-context";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { login, error } = useAuth();
+  
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // URL থেকে redirect পাথ খুঁজে বের করা, না থাকলে ডিফল্ট /profile
+  const redirectTo = searchParams.get("redirect") || "/profile";
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    login(email, password);
+    await login(email, password);
+    
+    // লগ-ইন সফল হলে রিডাইরেক্ট হবে
+    // দ্রষ্টব্য: আপনার auth-context যদি সফল লগ-ইন এ এরর না দেয়, তবেই এটি কাজ করবে
+    if (!error) {
+      router.push(redirectTo);
+    }
   };
 
   return (

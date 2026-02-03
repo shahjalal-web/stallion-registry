@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "../auth-context";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
@@ -10,11 +12,40 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { signup, error } = useAuth();
+  
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    signup({ name, email, subscription: "free", registeredStallions: [], favorites: [] }, password);
-  };
+  // URL থেকে redirect পাথ খুঁজে বের করা, না থাকলে ডিফল্ট /profile
+  const redirectTo = searchParams.get("redirect") || "/profile";
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  try {
+    // ১. সাইন-আপ প্রসেস শুরু এবং এর রেসপন্সটি ধরা
+    // দ্রষ্টব্য: আপনার signup ফাংশন যেন সফল হলে 'true' বা ইউজার অবজেক্ট রিটার্ন করে
+    const response: any = await signup({ 
+      name, 
+      email, 
+      subscription: "free", 
+      registeredStallions: [], 
+      favorites: [] 
+    }, password);
+    
+    // ২. শুধুমাত্র যদি রেসপন্স সফল হয় (কোনো এরর না থাকে), তবেই রিডাইরেক্ট হবে
+    // এখানে 'response' এর বদলে আপনি 'if (!error)' চেক করতে পারেন যদি আপনার context সেভাবে সেট করা থাকে
+    if (response) {
+      router.push(redirectTo); 
+    }
+
+  } catch (err) {
+    // ৩. ডুপ্লিকেট ইমেইল বা অন্য কোনো এরর হলে এখানে আসবে
+    // এখানে শুধু এরর কনসোলে দেখাবে, রিডাইরেক্ট (router.push) হবে না
+    console.error("Signup failed:", err);
+    // এখানে ইউজারকে এরর মেসেজ দেখানোর জন্য আপনার স্টেট আপডেট করতে পারেন
+  }
+};
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-6">
@@ -66,7 +97,7 @@ export default function SignupPage() {
         </form>
 
         <p className="mt-6 text-center text-zinc-500 text-sm">
-          Already have an account? <Link href="/login" className="text-[#D4AF37] hover:underline">Login</Link>
+          Already have an account? <Link href={`/login?redirect=${redirectTo}`} className="text-[#D4AF37] hover:underline">Login</Link>
         </p>
       </div>
     </div>
