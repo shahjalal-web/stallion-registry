@@ -136,7 +136,7 @@ export default function ProfilePage() {
                   </div>
                 ))}
                 <Link
-                  href="/submit-stallion"
+                  href="/submit-stallion/before-submit"
                   className="block text-center py-2 text-[10px] font-bold text-zinc-500 border border-dashed border-zinc-800 rounded-lg hover:border-zinc-700 hover:text-zinc-300 transition"
                 >
                   + Register Another Stallion
@@ -148,7 +148,7 @@ export default function ProfilePage() {
                   You haven't registered any stallions yet.
                 </p>
                 <Link
-                  href="/submit-stallion"
+                  href="/submit-stallion/before-submit"
                   className="text-xs font-bold text-[#D4AF37] border border-[#D4AF37] px-6 py-2 rounded hover:bg-[#D4AF37] hover:text-black transition"
                 >
                   Register a Stallion

@@ -9,6 +9,7 @@ import { useMemo, useState, useEffect } from "react";
 
 import Link from "next/link";
 import { useAuth } from "../auth-context";
+import { useRouter } from "next/navigation";
 
 type Breed = "Quarter Horse" | "Paint" | "Appaloosa";
 type SemenAvailability = "Fresh" | "Chilled" | "Frozen" | "Combination";
@@ -130,6 +131,8 @@ export default function SubmitStallionPage() {
       reference: "",
     },
   ]);
+
+  const router = useRouter();
 
   // 1. Core Identity
   const [status, setStatus] = useState<StallionStatus>("Active");
@@ -284,13 +287,23 @@ export default function SubmitStallionPage() {
       currentUsers[currentUserIndex].registeredStallions =
         updatedUser.registeredStallions;
       localStorage.setItem("users", JSON.stringify(currentUsers));
-
-      alert(
-        "Stallion submitted successfully! It is now visible in your profile.",
-      );
-      window.location.href = "/profile"; // প্রোফাইল পেজে রিডাইরেক্ট
+      // router.push("/payment");
+      // alert(
+      //   "Stallion submitted successfully! It is now visible in your profile.",
+      // );
+      window.location.href = "/payment"; // প্রোফাইল পেজে রিডাইরেক্ট
     }
   };
+
+  // পেজ লোড হওয়ার সময় ইউজার ডেটা থাকলে তা ইনপুট ফিল্ডে বসিয়ে দিবে
+  useEffect(() => {
+    if (user?.name) {
+      setRegisteredName(user.name); // ইউজারের নাম অটোমেটিক বসে যাবে
+    }
+    // // যদি ইউজারের কান্ট্রি বা অন্য তথ্য প্রোফাইলে থাকে তবে সেগুলোও সেট করতে পারেন
+    // if (user?.location) {
+    //   setCountryOfStanding(user.location);}
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-black p-6 text-zinc-100">
@@ -324,6 +337,7 @@ export default function SubmitStallionPage() {
                 </option>
               </Select>
             </div>
+
             <div>
               <FieldLabel>Registered Name *</FieldLabel>
               <Input
@@ -332,6 +346,7 @@ export default function SubmitStallionPage() {
                 placeholder="Full Name"
               />
             </div>
+
             <div>
               <FieldLabel>Country of Standing *</FieldLabel>
               <Input
@@ -339,6 +354,7 @@ export default function SubmitStallionPage() {
                 onChange={(e) => setCountryOfStanding(e.target.value)}
               />
             </div>
+
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <FieldLabel>Year of Birth *</FieldLabel>

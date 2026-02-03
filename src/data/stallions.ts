@@ -72,35 +72,157 @@ export const stallions: Stallion[] = [
     },
 
     performanceRecords: [
-      // রিকোয়ারমেন্ট ৫: আনলিমিটেড লিস্ট
       {
         year: 2023,
-        event: "AQHA Level 1 Championship",
-        discipline: "Senior Western Pleasure",
-        result: "Top 10",
+        event: "AQHA World Championship Show",
+        discipline: "Western Pleasure",
+        result: "World Champion",
         reference: {
-          label: "Published results",
-          href: "https://show-results.example/a2023",
+          label: "View Official Results",
+          href: "https://show-results.example/aqha-world-2023",
+        },
+        notes: "Top score in the senior division.",
+        judges: "D. Smith, J. Jones, R. Williams",
+        earnings: "$5,000",
+        levelEarnings: {
+          value: 5000,
+          currency: "USD",
         },
       },
       {
         year: 2022,
-        event: "NSBA World Championship Show",
-        discipline: "Western Pleasure",
-        result: "Finalist",
+        event: "Australian Paint Horse Nationals",
+        discipline: "Hunter Under Saddle",
+        result: "Champion",
         reference: {
-          label: "Published results",
-          href: "https://show-results.example/n2022",
+          label: "Published Results",
+          href: "https://show-results.example/apha2022",
+        },
+        notes: "Won by unanimous decision under all three judges.",
+        judges: "Sarah Thompson",
+        earnings: "$2,500",
+        levelEarnings: {
+          value: 2500,
+          currency: "AUD",
         },
       },
       {
         year: 2021,
-        event: "The Championship Show",
-        discipline: "Trail",
+        event: "State Championships",
+        discipline: "Ranch Rail",
         result: "Reserve Champion",
         reference: {
-          label: "Published results",
-          href: "https://show-results.example/t2021",
+          label: "Show Record",
+          href: "https://show-results.example/state2021",
+        },
+        notes: "High point earner in the amateur class.",
+        judges: "Michael Brown",
+        earnings: "$1,200",
+        levelEarnings: {
+          value: 1200,
+          currency: "AUD",
+        },
+      },
+      {
+        year: 2023,
+        event: "AQHA World Championship Show",
+        discipline: "Western Pleasure",
+        result: "World Champion",
+        reference: {
+          label: "View Official Results",
+          href: "https://show-results.example/aqha-world-2023",
+        },
+        notes: "Top score in the senior division.",
+        judges: "D. Smith, J. Jones, R. Williams",
+        earnings: "$5,000",
+        levelEarnings: {
+          value: 5000,
+          currency: "USD",
+        },
+      },
+      {
+        year: 2022,
+        event: "Australian Paint Horse Nationals",
+        discipline: "Hunter Under Saddle",
+        result: "Champion",
+        reference: {
+          label: "Published Results",
+          href: "https://show-results.example/apha2022",
+        },
+        notes: "Won by unanimous decision under all three judges.",
+        judges: "Sarah Thompson",
+        earnings: "$2,500",
+        levelEarnings: {
+          value: 2500,
+          currency: "AUD",
+        },
+      },
+      {
+        year: 2021,
+        event: "State Championships",
+        discipline: "Ranch Rail",
+        result: "Reserve Champion",
+        reference: {
+          label: "Show Record",
+          href: "https://show-results.example/state2021",
+        },
+        notes: "High point earner in the amateur class.",
+        judges: "Michael Brown",
+        earnings: "$1,200",
+        levelEarnings: {
+          value: 1200,
+          currency: "AUD",
+        },
+      },
+      {
+        year: 2023,
+        event: "AQHA World Championship Show",
+        discipline: "Western Pleasure",
+        result: "World Champion",
+        reference: {
+          label: "View Official Results",
+          href: "https://show-results.example/aqha-world-2023",
+        },
+        notes: "Top score in the senior division.",
+        judges: "D. Smith, J. Jones, R. Williams",
+        earnings: "$5,000",
+        levelEarnings: {
+          value: 5000,
+          currency: "USD",
+        },
+      },
+      {
+        year: 2022,
+        event: "Australian Paint Horse Nationals",
+        discipline: "Hunter Under Saddle",
+        result: "Champion",
+        reference: {
+          label: "Published Results",
+          href: "https://show-results.example/apha2022",
+        },
+        notes: "Won by unanimous decision under all three judges.",
+        judges: "Sarah Thompson",
+        earnings: "$2,500",
+        levelEarnings: {
+          value: 2500,
+          currency: "AUD",
+        },
+      },
+      {
+        year: 2021,
+        event: "State Championships",
+        discipline: "Ranch Rail",
+        result: "Reserve Champion",
+        reference: {
+          label: "Show Record",
+          href: "https://show-results.example/state2021",
+        },
+        notes: "High point earner in the amateur class.",
+        judges: "Michael Brown",
+        earnings: "$1,200",
+        levelEarnings: {
+          value: 1200,
+          currency: "AUD",
         },
       },
     ],
@@ -115,6 +237,72 @@ export const stallions: Stallion[] = [
     },
 
     notableProgeny: [
+      // রিকোয়ারমেন্ট ৩: আনলিমিটেড লিস্ট
+      {
+        name: "Obsidian Affair",
+        year: 2022,
+        association: "AQHA",
+        discipline: "Western Pleasure",
+        result: "Level 1 Champion (2YO)",
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/obsidian-affair",
+        },
+      },
+      {
+        name: "Knight Moves",
+        year: 2021,
+        association: "NSBA",
+        discipline: "Trail",
+        result: "Top 5 — NSBA Futurity",
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/knight-moves",
+        },
+      },
+      {
+        name: "Midnight Sonata",
+        association: "AQHA",
+        discipline: "Ranch Riding",
+        result: "Multiple circuit awards (sample)",
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/midnight-sonata",
+        },
+      },
+      // রিকোয়ারমেন্ট ৩: আনলিমিটেড লিস্ট
+      {
+        name: "Obsidian Affair",
+        year: 2022,
+        association: "AQHA",
+        discipline: "Western Pleasure",
+        result: "Level 1 Champion (2YO)",
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/obsidian-affair",
+        },
+      },
+      {
+        name: "Knight Moves",
+        year: 2021,
+        association: "NSBA",
+        discipline: "Trail",
+        result: "Top 5 — NSBA Futurity",
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/knight-moves",
+        },
+      },
+      {
+        name: "Midnight Sonata",
+        association: "AQHA",
+        discipline: "Ranch Riding",
+        result: "Multiple circuit awards (sample)",
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/midnight-sonata",
+        },
+      },
       // রিকোয়ারমেন্ট ৩: আনলিমিটেড লিস্ট
       {
         name: "Obsidian Affair",
@@ -291,6 +479,108 @@ export const stallions: Stallion[] = [
           currency: "AUD",
         },
       },
+      {
+        year: 2023,
+        event: "AQHA World Championship Show",
+        discipline: "Western Pleasure",
+        result: "World Champion",
+        reference: {
+          label: "View Official Results",
+          href: "https://show-results.example/aqha-world-2023",
+        },
+        notes: "Top score in the senior division.",
+        judges: "D. Smith, J. Jones, R. Williams",
+        earnings: "$5,000",
+        levelEarnings: {
+          value: 5000,
+          currency: "USD",
+        },
+      },
+      {
+        year: 2022,
+        event: "Australian Paint Horse Nationals",
+        discipline: "Hunter Under Saddle",
+        result: "Champion",
+        reference: {
+          label: "Published Results",
+          href: "https://show-results.example/apha2022",
+        },
+        notes: "Won by unanimous decision under all three judges.",
+        judges: "Sarah Thompson",
+        earnings: "$2,500",
+        levelEarnings: {
+          value: 2500,
+          currency: "AUD",
+        },
+      },
+      {
+        year: 2021,
+        event: "State Championships",
+        discipline: "Ranch Rail",
+        result: "Reserve Champion",
+        reference: {
+          label: "Show Record",
+          href: "https://show-results.example/state2021",
+        },
+        notes: "High point earner in the amateur class.",
+        judges: "Michael Brown",
+        earnings: "$1,200",
+        levelEarnings: {
+          value: 1200,
+          currency: "AUD",
+        },
+      },
+      {
+        year: 2023,
+        event: "AQHA World Championship Show",
+        discipline: "Western Pleasure",
+        result: "World Champion",
+        reference: {
+          label: "View Official Results",
+          href: "https://show-results.example/aqha-world-2023",
+        },
+        notes: "Top score in the senior division.",
+        judges: "D. Smith, J. Jones, R. Williams",
+        earnings: "$5,000",
+        levelEarnings: {
+          value: 5000,
+          currency: "USD",
+        },
+      },
+      {
+        year: 2022,
+        event: "Australian Paint Horse Nationals",
+        discipline: "Hunter Under Saddle",
+        result: "Champion",
+        reference: {
+          label: "Published Results",
+          href: "https://show-results.example/apha2022",
+        },
+        notes: "Won by unanimous decision under all three judges.",
+        judges: "Sarah Thompson",
+        earnings: "$2,500",
+        levelEarnings: {
+          value: 2500,
+          currency: "AUD",
+        },
+      },
+      {
+        year: 2021,
+        event: "State Championships",
+        discipline: "Ranch Rail",
+        result: "Reserve Champion",
+        reference: {
+          label: "Show Record",
+          href: "https://show-results.example/state2021",
+        },
+        notes: "High point earner in the amateur class.",
+        judges: "Michael Brown",
+        earnings: "$1,200",
+        levelEarnings: {
+          value: 1200,
+          currency: "AUD",
+        },
+      },
     ],
 
     breedingStatistics: {
@@ -303,6 +593,48 @@ export const stallions: Stallion[] = [
     },
 
     notableProgeny: [
+      {
+        name: "Gunmetal Rose",
+        year: 2022,
+        association: "APHA",
+        discipline: "Hunter Under Saddle",
+        result: "National finalist (sample)",
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/gunmetal-rose",
+        },
+      },
+      {
+        name: "Southern Rail",
+        association: "APHA",
+        discipline: "Ranch Rail",
+        result: "Circuit champion (sample)",
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/southern-rail",
+        },
+      },
+      {
+        name: "Gunmetal Rose",
+        year: 2022,
+        association: "APHA",
+        discipline: "Hunter Under Saddle",
+        result: "National finalist (sample)",
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/gunmetal-rose",
+        },
+      },
+      {
+        name: "Southern Rail",
+        association: "APHA",
+        discipline: "Ranch Rail",
+        result: "Circuit champion (sample)",
+        reference: {
+          label: "Reference",
+          href: "https://progeny.example/southern-rail",
+        },
+      },
       {
         name: "Gunmetal Rose",
         year: 2022,
@@ -410,13 +742,156 @@ export const stallions: Stallion[] = [
 
     performanceRecords: [
       {
-        year: 2020,
-        event: "Regional Championships",
-        discipline: "Trail",
-        result: "Champion (sample)",
+        year: 2023,
+        event: "AQHA World Championship Show",
+        discipline: "Western Pleasure",
+        result: "World Champion",
         reference: {
-          label: "Reference",
-          href: "https://show-results.example/uk2020",
+          label: "View Official Results",
+          href: "https://show-results.example/aqha-world-2023",
+        },
+        notes: "Top score in the senior division.",
+        judges: "D. Smith, J. Jones, R. Williams",
+        earnings: "$5,000",
+        levelEarnings: {
+          value: 5000,
+          currency: "USD",
+        },
+      },
+      {
+        year: 2022,
+        event: "Australian Paint Horse Nationals",
+        discipline: "Hunter Under Saddle",
+        result: "Champion",
+        reference: {
+          label: "Published Results",
+          href: "https://show-results.example/apha2022",
+        },
+        notes: "Won by unanimous decision under all three judges.",
+        judges: "Sarah Thompson",
+        earnings: "$2,500",
+        levelEarnings: {
+          value: 2500,
+          currency: "AUD",
+        },
+      },
+      {
+        year: 2021,
+        event: "State Championships",
+        discipline: "Ranch Rail",
+        result: "Reserve Champion",
+        reference: {
+          label: "Show Record",
+          href: "https://show-results.example/state2021",
+        },
+        notes: "High point earner in the amateur class.",
+        judges: "Michael Brown",
+        earnings: "$1,200",
+        levelEarnings: {
+          value: 1200,
+          currency: "AUD",
+        },
+      },
+      {
+        year: 2023,
+        event: "AQHA World Championship Show",
+        discipline: "Western Pleasure",
+        result: "World Champion",
+        reference: {
+          label: "View Official Results",
+          href: "https://show-results.example/aqha-world-2023",
+        },
+        notes: "Top score in the senior division.",
+        judges: "D. Smith, J. Jones, R. Williams",
+        earnings: "$5,000",
+        levelEarnings: {
+          value: 5000,
+          currency: "USD",
+        },
+      },
+      {
+        year: 2022,
+        event: "Australian Paint Horse Nationals",
+        discipline: "Hunter Under Saddle",
+        result: "Champion",
+        reference: {
+          label: "Published Results",
+          href: "https://show-results.example/apha2022",
+        },
+        notes: "Won by unanimous decision under all three judges.",
+        judges: "Sarah Thompson",
+        earnings: "$2,500",
+        levelEarnings: {
+          value: 2500,
+          currency: "AUD",
+        },
+      },
+      {
+        year: 2021,
+        event: "State Championships",
+        discipline: "Ranch Rail",
+        result: "Reserve Champion",
+        reference: {
+          label: "Show Record",
+          href: "https://show-results.example/state2021",
+        },
+        notes: "High point earner in the amateur class.",
+        judges: "Michael Brown",
+        earnings: "$1,200",
+        levelEarnings: {
+          value: 1200,
+          currency: "AUD",
+        },
+      },
+      {
+        year: 2023,
+        event: "AQHA World Championship Show",
+        discipline: "Western Pleasure",
+        result: "World Champion",
+        reference: {
+          label: "View Official Results",
+          href: "https://show-results.example/aqha-world-2023",
+        },
+        notes: "Top score in the senior division.",
+        judges: "D. Smith, J. Jones, R. Williams",
+        earnings: "$5,000",
+        levelEarnings: {
+          value: 5000,
+          currency: "USD",
+        },
+      },
+      {
+        year: 2022,
+        event: "Australian Paint Horse Nationals",
+        discipline: "Hunter Under Saddle",
+        result: "Champion",
+        reference: {
+          label: "Published Results",
+          href: "https://show-results.example/apha2022",
+        },
+        notes: "Won by unanimous decision under all three judges.",
+        judges: "Sarah Thompson",
+        earnings: "$2,500",
+        levelEarnings: {
+          value: 2500,
+          currency: "AUD",
+        },
+      },
+      {
+        year: 2021,
+        event: "State Championships",
+        discipline: "Ranch Rail",
+        result: "Reserve Champion",
+        reference: {
+          label: "Show Record",
+          href: "https://show-results.example/state2021",
+        },
+        notes: "High point earner in the amateur class.",
+        judges: "Michael Brown",
+        earnings: "$1,200",
+        levelEarnings: {
+          value: 1200,
+          currency: "AUD",
         },
       },
     ],

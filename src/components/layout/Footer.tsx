@@ -39,7 +39,7 @@ export default function Footer() {
             Pricing
           </Link>
           <Link
-            href="/submit-stallion"
+            href="/submit-stallion/before-submit"
             className="hover:text-white transition-colors"
           >
             Submit a Listing

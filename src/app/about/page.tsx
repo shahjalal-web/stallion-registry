@@ -123,7 +123,7 @@ export default function AboutPage() {
           Stallion Directory
         </Link>
         <Link
-          href="/submit-stallion"
+          href="/submit-stallion/before-submit"
           className="w-full sm:w-auto text-center rounded-none border border-white px-12 py-5 text-[10px] font-bold uppercase tracking-[0.3em] text-white hover:bg-white hover:text-black transition-all duration-300"
         >
           Submit a Stallion Listing

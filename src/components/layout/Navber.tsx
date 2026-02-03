@@ -113,9 +113,9 @@ export default function Navbar() {
           {/* Navbar এর ভেতরে এই অংশটি আপডেট করো */}
           {user && (
             <Link
-              href="/submit-stallion"
+              href="/submit-stallion/before-submit"
               className={
-                isActive("/submit-stallion")
+                isActive("/submit-stallion/before-submit")
                   ? "text-[#b08d57] border-b border-[#b08d57] pb-1"
                   : "text-zinc-400 hover:text-white transition"
               }
@@ -210,7 +210,7 @@ export default function Navbar() {
 
             {user && (
               <Link
-                href="/submit-stallion"
+                href="/submit-stallion/before-submit"
                 className="mt-2 text-zinc-300 hover:text-white"
               >
                 Submit Stallion
