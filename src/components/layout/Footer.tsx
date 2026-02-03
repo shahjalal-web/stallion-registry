@@ -21,20 +21,21 @@ export default function Footer() {
         {/* Navigation Section - Updated Titles from Image 4 */}
         <div className="flex flex-col space-y-2 text-xs uppercase tracking-widest text-center md:text-left">
           <Link
+            href="/"
+            className="hover:text-white transition-colors"
+          >
+            Registry
+          </Link>
+          <Link
             href="/stallions"
             className="hover:text-white transition-colors"
           >
             Stallion Directory
           </Link>
-          <Link href="/" className="hover:text-white transition-colors">
+          {/* <Link href="/" className="hover:text-white transition-colors">
             Owners
-          </Link>
-          <Link
-            href="/"
-            className="hover:text-white transition-colors"
-          >
-            Breeding Service Providers
-          </Link>
+          </Link> */}
+          
           <Link href="/pricing" className="hover:text-white transition-colors">
             Pricing
           </Link>
@@ -47,9 +48,9 @@ export default function Footer() {
           <Link href="/about" className="hover:text-white transition-colors">
             About
           </Link>
-          <Link href="/" className="hover:text-white transition-colors">
+          {/* <Link href="/" className="hover:text-white transition-colors">
             Contact
-          </Link>
+          </Link> */}
         </div>
 
         {/* Contact Section - Updated from Image 4 */}
