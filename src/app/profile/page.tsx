@@ -60,7 +60,7 @@ export default function ProfilePage() {
           </h1>
           <p className="text-zinc-500">{user.email}</p>
         </div>
-        <div className="flex items-center gap-3">
+        {/* <div className="flex items-center gap-3">
           <span
             className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border transition-all ${
               user.subscription === "paid"
@@ -83,7 +83,7 @@ export default function ProfilePage() {
               ? "Upgrade to Premium"
               : "Downgrade to Free"}
           </button>
-        </div>
+        </div> */}
       </header>
 
       <div className="grid gap-8 md:grid-cols-2">

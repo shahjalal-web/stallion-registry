@@ -1,13 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import type { PerformanceEntry } from "@/types/stallion";
-
+// ডাটা মডেল অনুযায়ী টাইপ আপডেট করা হয়েছে
 export default function PerformanceSection({
   records,
 }: {
-  records?: PerformanceEntry[];
+  records?: any[]; // আপনার ডাটা মডেল অনুযায়ী record অ্যারে
 }) {
-  // যদি কোনো রেকর্ড না থাকে
   if (!records?.length) return null;
 
   return (
@@ -24,7 +23,6 @@ export default function PerformanceSection({
         <div className="h-px flex-1 mx-4 bg-zinc-800" />
       </div>
 
-      {/* সরাসরি একটি টেবিল বা লিস্টের মতো স্ট্রাকচার যা আনলিমিটেড রেকর্ড দেখাবে */}
       <div className="space-y-6">
         {records.map((rec, i) => (
           <div
@@ -39,31 +37,31 @@ export default function PerformanceSection({
                 </span>
                 <div>
                   <p className="text-sm font-bold text-white uppercase tracking-tight">
-                    {rec.event}
+                    {rec.event || "Unnamed Event"}
                   </p>
                   <p className="text-xs text-zinc-400">
-                    {rec.discipline} ·{" "}
+                    {rec.discipline || "General"} ·{" "}
                     <span className="text-[#B08D57]/80 font-medium">
-                      {rec.result}
+                      Result: {rec.result || "N/A"}
                     </span>
                   </p>
                 </div>
               </div>
 
+              {/* levelEarnings এখন সরাসরি স্ট্রিং */}
               {rec.levelEarnings && (
                 <div className="text-right">
                   <p className="text-[10px] text-zinc-500 uppercase font-bold">
                     Earnings
                   </p>
                   <p className="text-sm font-bold text-green-500/90">
-                    {rec.levelEarnings.currency}{" "}
-                    {rec.levelEarnings.value.toLocaleString()}
+                    ${Number(rec.levelEarnings).toLocaleString()}
                   </p>
                 </div>
               )}
             </div>
 
-            {/* DETAILS - এখন সরাসরি দেখা যাবে, কোনো ক্লিকের প্রয়োজন নেই */}
+            {/* DETAILS */}
             <div className="grid gap-6 pt-4 border-t border-zinc-800/50 sm:grid-cols-2 lg:grid-cols-3">
               {rec.notes && (
                 <div className="space-y-1">
@@ -85,23 +83,24 @@ export default function PerformanceSection({
                 </div>
               )}
 
-              {rec.reference?.href && (
+              {/* reference এখন সরাসরি স্ট্রিং (URL) */}
+              {rec.reference && (
                 <div className="space-y-1">
                   <p className="text-[10px] text-zinc-500 uppercase font-bold">
                     Verification
                   </p>
                   <a
-                    href={rec.reference.href}
+                    href={rec.reference}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#B08D57] hover:text-white transition-colors"
                   >
-                    OFFICIAL RESULT PAGE
+                    VIEW REFERENCE
                     <svg
                       className="w-3 h-3"
                       fill="none"
-                      viewBox="0 0 24 24"
                       stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
                       <path
                         strokeLinecap="round"

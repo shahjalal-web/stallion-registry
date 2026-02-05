@@ -16,21 +16,23 @@ function Value({ children }: { children: React.ReactNode }) {
   return <p className="text-sm text-zinc-100">{children}</p>;
 }
 
-export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
-  const { user, toggleFavorite } = useAuth(); // Auth Context থেকে ডেটা নেয়া
-  const owner = stallion.owners?.[0];
-  const [showPedigree, setShowPedigree] = useState(false);
+export default function ProfileHeader({ stallion }: { stallion: any }) {
+  const { user, toggleFavorite } = useAuth();
+  
+  // ডাটা মডেল অনুযায়ী Destructuring
+  // আপনার মডেলে 'owners' অ্যারে নেই, সরাসরি 'owner' অবজেক্ট আছে।
+  const owner = stallion?.owner; 
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // চেক করবে stallion টি কি ইউজারের ফেভারিট লিস্টে আছে?
-  const isFavorited = user?.favorites?.some((f: any) => f.id === stallion.id);
+  // MongoDB ID চেক (_id.$oid অথবা সরাসরি _id)
+  const stallionId = stallion?._id?.$oid || stallion?._id;
+  const isFavorited = user?.favorites?.some((f: any) => f.id === stallionId);
 
   const handleFavoriteClick = () => {
     if (!user) {
-      // ইউজার লগইন না থাকলে মডাল দেখাবে
       setIsModalOpen(true);
     } else {
-      // ইউজার লগইন থাকলে ফেভারিট টগল হবে (লোকাল স্টোরেজে সেভ হবে)
       toggleFavorite(stallion);
     }
   };
@@ -43,16 +45,15 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
           <div className="aspect-4/5 overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900">
             <img
               src={
-                stallion.media?.primaryImageUrl ||
-                "https://images.unsplash.com/photo-1517849845537-4d257902454a"
+                stallion?.media?.primaryImageUrl ||
+                "/placeholder-stallion.jpg"
               }
-              alt={stallion.registeredName}
+              alt={stallion?.registeredName}
               className="h-full w-full object-cover"
             />
           </div>
 
           <div className="flex items-center justify-between gap-2 border-t border-zinc-800 pt-3">
-            {/* Favourite Toggle Button */}
             <div className="group relative flex-1">
               <button
                 type="button"
@@ -63,7 +64,6 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
                     : "border-zinc-800 bg-zinc-900/50 text-zinc-500 group-hover:border-zinc-700 hover:text-zinc-300"
                 }`}
               >
-                {/* Heart Icon Toggle Logic */}
                 <svg
                   className={`h-4 w-4 transition-colors ${isFavorited ? "fill-current" : "fill-none"}`}
                   stroke="currentColor"
@@ -79,7 +79,6 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
                 {isFavorited ? "Saved" : "Save to favourites"}
               </button>
 
-              {/* Tooltip only for non-logged users */}
               {!user && (
                 <div className="absolute bottom-full left-1/2 mb-2 w-48 -translate-x-1/2 scale-95 opacity-0 transition-all group-hover:scale-100 group-hover:opacity-100">
                   <div className="rounded bg-[#b08d57] px-2 py-1 text-[10px] font-bold text-black shadow-xl text-center">
@@ -90,8 +89,8 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
               )}
             </div>
 
-            {/* Founding Member Badge */}
-            {stallion.isFoundingMember && (
+            {/* Founding Member Badge Logic (যদি ডাটাতে না থাকে তবে হাইড থাকবে) */}
+            {stallion?.isFoundingMember && (
               <div className="shrink-0">
                 <FoundingBadge />
               </div>
@@ -103,11 +102,10 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
         <div className="space-y-4">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-white">
-              {stallion.registeredName}
+              {stallion?.registeredName || "Unnamed Stallion"}
             </h1>
             <p className="text-sm text-zinc-400">
-              Breed: {stallion.breed} · Discipline focus:{" "}
-              {stallion.disciplineFocus?.join(" · ") || "—"}
+              Status: {stallion?.status} · Country: {stallion?.countryOfStanding}
             </p>
           </div>
 
@@ -116,172 +114,88 @@ export default function ProfileHeader({ stallion }: { stallion: Stallion }) {
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <Label>Year of birth</Label>
-                <Value>{stallion.yearOfBirth}</Value>
+                <Value>{stallion?.yearOfBirth || "—"}</Value>
               </div>
 
               <div>
-                <Label>Brief description</Label>
+                <Label>Height & Registration</Label>
                 <Value>
-                  {[stallion.colour, formatHeight(stallion.height)]
+                  {[formatHeight(stallion?.height), stallion?.registrationNumber]
                     .filter(Boolean)
                     .join(" · ") || "—"}
                 </Value>
               </div>
 
               <div className="sm:col-span-2">
-                <Label>Parentage</Label>
-                <div className="text-sm">
-                  <Value>
-                    {stallion.pedigree.sire?.name}
-                    <span className="text-xs text-zinc-500">
-                      {" "}
-                      ({stallion.pedigree.sire?.sire?.name} ×{" "}
-                      {stallion.pedigree.sire?.dam?.name})
-                    </span>
-                    <br />
-                    ×
-                    <br />
-                    {stallion.pedigree.dam?.name}
-                    <span className="text-xs text-zinc-500">
-                      {" "}
-                      ({stallion.pedigree.dam?.sire?.name} ×{" "}
-                      {stallion.pedigree.dam?.dam?.name})
-                    </span>
-                  </Value>
-                </div>
-
-                <button
-                  onClick={() => setShowPedigree(!showPedigree)}
-                  className="mt-2 text-xs text-[#b08d57] hover:underline"
-                >
-                  {showPedigree
-                    ? "Hide extended pedigree"
-                    : "View extended pedigree"}
-                </button>
-
-                {showPedigree && (
-                  <div className="mt-3 grid gap-2 text-xs text-zinc-300 sm:grid-cols-2">
-                    <p>
-                      <span className="text-zinc-500">
-                        Grandsire (Sire line):{" "}
-                      </span>
-                      {stallion.pedigree.sire?.sire?.name || "—"}
-                    </p>
-                    <p>
-                      <span className="text-zinc-500">
-                        Granddam (Sire line):{" "}
-                      </span>
-                      {stallion.pedigree.sire?.dam?.name || "—"}
-                    </p>
-                    <p>
-                      <span className="text-zinc-500">
-                        Grandsire (Dam line):{" "}
-                      </span>
-                      {stallion.pedigree.dam?.sire?.name || "—"}
-                    </p>
-                    <p>
-                      <span className="text-zinc-500">
-                        Granddam (Dam line):{" "}
-                      </span>
-                      {stallion.pedigree.dam?.dam?.name || "—"}
-                    </p>
-                  </div>
+                <Label>Official Registry Link</Label>
+                {stallion?.officialRegistryLink ? (
+                  <a 
+                    href={stallion.officialRegistryLink} 
+                    target="_blank" 
+                    className="text-sm text-[#b08d57] hover:underline block truncate"
+                  >
+                    View Document
+                  </a>
+                ) : (
+                  <Value>No document attached</Value>
                 )}
               </div>
 
               <div>
-                <Label>Country</Label>
-                <Value>{stallion.countryOfStanding}</Value>
+                <Label>Stud Fee</Label>
+                <Value>{stallion?.studFee || "Private Treaty"}</Value>
               </div>
 
               <div>
-                <Label>Status</Label>
-                <Value>{stallion.status || "Standing"}</Value>
+                <Label>Guarantee</Label>
+                <Value>{stallion?.guarantee || "—"}</Value>
               </div>
             </div>
           </div>
 
-          {/* OWNER + REGISTRY */}
+          {/* OWNER + DISEASE TESTING */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
-              <p className="text-sm font-semibold text-white">Owner</p>
+              <p className="text-sm font-semibold text-white">Owner Information</p>
               <Value>{owner?.name || "—"}</Value>
+              <p className="text-[10px] text-zinc-500">{owner?.email}</p>
             </div>
 
             <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-4">
               <p className="text-sm font-semibold text-white">
-                Registry Record
+                Disease Testing
               </p>
-              <Value>{stallion.registryAssociation}</Value>
-              <Value>{stallion.registrationNumber}</Value>
+              {stallion?.diseaseTesting ? (
+                <a href={stallion.diseaseTesting} target="_blank" className="text-xs text-[#b08d57] hover:underline">
+                  View Results
+                </a>
+              ) : (
+                <Value>Not Provided</Value>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* --- AUTH REQUIRED MODAL --- */}
+      {/* --- AUTH MODAL (Same as before) --- */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-          <div
-            className="relative w-full max-w-sm rounded-2xl border border-zinc-800 bg-zinc-950 p-8 shadow-2xl animate-in zoom-in-95 duration-300"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close Button */}
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute right-5 top-5 text-zinc-500 hover:text-white transition-colors"
-            >
-              ✕
-            </button>
-
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="relative w-full max-w-sm rounded-2xl border border-zinc-800 bg-zinc-950 p-8 shadow-2xl">
+            <button onClick={() => setIsModalOpen(false)} className="absolute right-5 top-5 text-zinc-500 hover:text-white">✕</button>
             <div className="text-center">
-              {/* Heart Icon from your provided snippet */}
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#b08d57]/10 text-[#b08d57]">
-                <svg
-                  className="h-8 w-8"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  />
+                <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
               </div>
-
-              <h3 className="text-xl font-bold text-white tracking-tight">
-                Save to Favorites
-              </h3>
-              <p className="mt-4 text-sm text-zinc-400 leading-relaxed">
-                Join Leading Sires to create your personalized list of favorite
-                stallions and compare them later.
-              </p>
-
+              <h3 className="text-xl font-bold text-white tracking-tight">Save to Favorites</h3>
+              <p className="mt-4 text-sm text-zinc-400">Login to save your favorite stallions.</p>
               <div className="mt-8 flex flex-col gap-3">
-                <Link
-                  href="/login"
-                  className="rounded-xl bg-[#b08d57] py-3 text-sm font-bold text-black text-center transition-all hover:bg-[#d4af37]"
-                >
-                  Login / Sign Up
-                </Link>
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="rounded-xl border border-zinc-800 bg-zinc-900 py-3 text-sm font-bold text-zinc-300 transition-all hover:bg-zinc-800"
-                >
-                  Not Now
-                </button>
+                <Link href="/login" className="rounded-xl bg-[#b08d57] py-3 text-sm font-bold text-black text-center hover:bg-[#d4af37]">Login / Sign Up</Link>
+                <button onClick={() => setIsModalOpen(false)} className="rounded-xl border border-zinc-800 bg-zinc-900 py-3 text-sm font-bold text-zinc-300">Not Now</button>
               </div>
             </div>
           </div>
-
-          {/* Backdrop click to close */}
-          <div
-            className="absolute inset-0 -z-10 h-full w-full"
-            onClick={() => setIsModalOpen(false)}
-          />
         </div>
       )}
     </section>

@@ -68,6 +68,9 @@ export default function LoginForm() {
         <p className="mt-6 text-center text-zinc-500 text-sm">
           New here? <Link href="/signup" className="text-[#D4AF37] hover:underline">Create an account</Link>
         </p>
+        <p className="mt-6 text-center text-zinc-500 text-sm">
+          Admin Login <Link href="/login/admin" className="text-[#846c1f] hover:underline">Admin Login</Link>
+        </p>
       </div>
     </div>
   );

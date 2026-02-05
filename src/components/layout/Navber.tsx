@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
@@ -8,9 +9,12 @@ import { useEffect, useRef, useState } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { user, logout } = useAuth(); // ইউজার এবং লগআউট ফাংশন নিলাম
+  const { user, logout } = useAuth();
+
   const [open, setOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [adminUser, setAdminUser] = useState<any>(null);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -18,7 +22,18 @@ export default function Navbar() {
     setResourcesOpen(false);
   }, [pathname]);
 
-  // ডপডাউন এর বাইরে ক্লিক করলে বন্ধ হবে
+  useEffect(() => {
+    const syncAdmin = () => {
+      const storedAdmin = localStorage.getItem("adminUser");
+      setAdminUser(storedAdmin ? JSON.parse(storedAdmin) : null);
+    };
+
+    syncAdmin(); // initial load
+
+    window.addEventListener("adminAuthChanged", syncAdmin);
+    return () => window.removeEventListener("adminAuthChanged", syncAdmin);
+  }, []);
+
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (
@@ -34,6 +49,13 @@ export default function Navbar() {
 
   const isActive = (href: string) => pathname === href;
 
+  const handleLogout = () => {
+    logout(); // user logout
+    localStorage.removeItem("adminUser");
+    localStorage.removeItem("adminToken");
+    setAdminUser(null);
+  };
+
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-800 bg-black/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4">
@@ -44,65 +66,58 @@ export default function Navbar() {
           Leading Sires Registry
         </Link>
 
-        {/* Desktop nav */}
+        {/* Desktop Nav */}
         <nav className="hidden items-center gap-6 sm:flex text-sm">
           <Link
             href="/"
             className={
               isActive("/")
-                ? "text-[#b08d57] border-b border-[#b08d57] pb-1"
+                ? "text-[#b08d57]"
                 : "text-zinc-400 hover:text-white"
             }
           >
             Registry
           </Link>
-
           <Link
             href="/stallions"
             className={
               isActive("/stallions")
-                ? "text-[#b08d57] border-b border-[#b08d57] pb-1"
+                ? "text-[#b08d57]"
                 : "text-zinc-400 hover:text-white"
             }
           >
             Stallion Directory
           </Link>
-
           <Link
             href="/pricing"
             className={
               isActive("/pricing")
-                ? "text-[#b08d57] border-b border-[#b08d57] pb-1"
+                ? "text-[#b08d57]"
                 : "text-zinc-400 hover:text-white"
             }
           >
             Pricing
           </Link>
 
-          {/* RESOURCES DROPDOWN */}
+          {/* Resources Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setResourcesOpen((v) => !v)}
-              className={`flex items-center gap-1 ${
-                pathname.startsWith("/resources")
-                  ? "text-[#b08d57]"
-                  : "text-zinc-400 hover:text-white"
-              }`}
+              className="text-zinc-400 hover:text-white"
             >
               Resources ▾
             </button>
-
             {resourcesOpen && (
               <div className="absolute top-7 left-0 w-56 rounded-lg border border-zinc-800 bg-zinc-950 shadow-xl">
                 <Link
                   href="/resources"
-                  className="block px-4 py-2 text-zinc-300 hover:bg-zinc-900 hover:text-white"
+                  className="block px-4 py-2 text-zinc-300 hover:bg-zinc-900"
                 >
                   Commercial Directory
                 </Link>
                 <Link
                   href="/resources/associations"
-                  className="block px-4 py-2 text-zinc-300 hover:bg-zinc-900 hover:text-white"
+                  className="block px-4 py-2 text-zinc-300 hover:bg-zinc-900"
                 >
                   Associations & Registries
                 </Link>
@@ -110,142 +125,108 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Navbar এর ভেতরে এই অংশটি আপডেট করো */}
           {user && (
             <Link
               href="/submit-stallion/before-submit"
-              className={
-                isActive("/submit-stallion/before-submit")
-                  ? "text-[#b08d57] border-b border-[#b08d57] pb-1"
-                  : "text-zinc-400 hover:text-white transition"
-              }
+              className="text-zinc-400 hover:text-white"
             >
               Submit Stallion
             </Link>
           )}
 
-          <Link
-            href="/about"
-            className={
-              isActive("/about")
-                ? "text-[#b08d57] border-b border-[#b08d57] pb-1"
-                : "text-zinc-400 hover:text-white"
-            }
-          >
+          <Link href="/about" className="text-zinc-400 hover:text-white">
             About
           </Link>
 
-          {/* Auth Section: ডেস্কটপ ভিউ */}
+          {/* Auth Section */}
           <div className="ml-4 flex items-center gap-4 border-l border-zinc-800 pl-4">
-            {user ? (
-              <div className="flex items-center gap-3">
-                <Link
-                  href="/profile"
-                  className={`font-medium ${isActive("/profile") ? "text-[#b08d57]" : "text-zinc-300 hover:text-[#D4AF37]"}`}
-                >
-                  {user.name}
-                </Link>
+            {user || adminUser ? (
+              <>
+                {user && (
+                  <Link
+                    href="/profile"
+                    className="text-zinc-300 hover:text-[#D4AF37]"
+                  >
+                    {user.name}
+                  </Link>
+                )}
+
+                {adminUser && (
+                  <Link
+                    href="/admin/dashboard"
+                    className="text-red-400 hover:text-red-300 font-medium"
+                  >
+                    Dashboard
+                  </Link>
+                )}
+
                 <button
-                  onClick={logout}
-                  className="text-xs text-zinc-500 hover:text-red-400 transition"
+                  onClick={handleLogout}
+                  className="text-xs text-zinc-500 hover:text-red-400"
                 >
                   Logout
                 </button>
-              </div>
+              </>
             ) : (
-              <div className="flex items-center gap-4">
-                <Link
-                  href="/login"
-                  className="text-zinc-400 hover:text-white transition"
-                >
+              <>
+                <Link href="/login" className="text-zinc-400 hover:text-white">
                   Login
                 </Link>
                 <Link
                   href="/signup"
-                  className="rounded-md bg-[#b08d57] px-3 py-1.5 text-xs font-bold text-black hover:bg-[#D4AF37] transition"
+                  className="rounded-md bg-[#b08d57] px-3 py-1.5 text-xs font-bold text-black"
                 >
                   Sign Up
                 </Link>
-              </div>
+              </>
             )}
           </div>
         </nav>
 
-        {/* Mobile button */}
+        {/* Mobile Toggle */}
         <button
           onClick={() => setOpen((v) => !v)}
-          className="sm:hidden rounded-md border border-zinc-700 bg-zinc-900 p-2 text-zinc-300 hover:border-[#b08d57] hover:text-white"
+          className="sm:hidden text-zinc-300"
         >
           {open ? "✕" : "☰"}
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu */}
       {open && (
         <div className="border-t border-zinc-800 bg-zinc-950 sm:hidden">
-          <nav className="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-1 text-sm">
-            <Link href="/" className="text-zinc-300 hover:text-white">
-              Registry
-            </Link>
-            <Link href="/stallions" className="text-zinc-300 hover:text-white">
-              Stallion Directory
-            </Link>
-            <Link href="/pricing" className="text-zinc-300 hover:text-white">
-              Pricing
-            </Link>
-
-            <p className="mt-2 text-xs text-zinc-500">Resources</p>
-            <Link
-              href="/resources"
-              className="pl-3 text-zinc-400 hover:text-white"
-            >
-              Commercial Directory
-            </Link>
-            <Link
-              href="/resources/associations"
-              className="pl-3 text-zinc-400 hover:text-white"
-            >
-              Associations & Registries
-            </Link>
+          <nav className="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-2 text-sm">
+            <Link href="/">Registry</Link>
+            <Link href="/stallions">Stallion Directory</Link>
+            <Link href="/pricing">Pricing</Link>
 
             {user && (
+              <Link href="/submit-stallion/before-submit">Submit Stallion</Link>
+            )}
+            <Link href="/about">About</Link>
+
+            {adminUser && (
               <Link
-                href="/submit-stallion/before-submit"
-                className="mt-2 text-zinc-300 hover:text-white"
+                href="/admin/dashboard"
+                className="text-red-400 font-semibold"
               >
-                Submit Stallion
+                Admin Dashboard
               </Link>
             )}
 
-            <Link href="/about" className="text-zinc-300 hover:text-white">
-              About
-            </Link>
-
-            {/* Mobile Auth */}
-            <div className="mt-4 border-t border-zinc-800 pt-4 pb-2">
-              {user ? (
-                <div className="flex flex-col gap-3">
-                  <Link
-                    href="/profile"
-                    className="text-[#b08d57] font-semibold"
-                  >
-                    {user.name} (Profile)
-                  </Link>
-                  <button onClick={logout} className="text-left text-zinc-400">
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-3">
-                  <Link href="/login" className="text-zinc-300">
-                    Login
-                  </Link>
-                  <Link href="/signup" className="text-[#b08d57] font-semibold">
-                    Sign Up
-                  </Link>
-                </div>
-              )}
-            </div>
+            {user || adminUser ? (
+              <button
+                onClick={handleLogout}
+                className="text-left text-zinc-400"
+              >
+                Logout
+              </button>
+            ) : (
+              <>
+                <Link href="/login">Login</Link>
+                <Link href="/signup">Sign Up</Link>
+              </>
+            )}
           </nav>
         </div>
       )}

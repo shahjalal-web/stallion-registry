@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -7,6 +6,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 interface User {
+  role: string;
   name: string;
   email: string;
   subscription: "free" | "paid";
@@ -36,46 +36,69 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (loggedInUser) setUser(JSON.parse(loggedInUser));
   }, []);
 
-  const signup = (userData: User, pass: string) => {
-    const existingUsers = JSON.parse(localStorage.getItem("users") || "[]");
-    const isExist = existingUsers.find((u: any) => u.email === userData.email);
+  const signup = async (userData: User, pass: string) => {
+    try {
+      const response = await fetch("https://stallion-registry-back-end.vercel.app/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...userData,
+          password: pass,
+        }),
+      });
 
-    if (isExist) {
-      setError("This email is already registered.");
-      return;
+      const data = await response.json();
+      console.log("hello");
+      if (!response.ok) {
+        throw new Error(data.message || "Signup failed");
+      }
+
+      // 🔥 user + token store
+      localStorage.setItem("currentUser", JSON.stringify(data.user));
+      localStorage.setItem("token", data.token);
+
+      setUser(data.user);
+      setError(null);
+
+      router.push("/profile");
+    } catch (err: any) {
+      setError(err.message);
     }
-
-    const newUser = { ...userData, password: pass };
-    localStorage.setItem("users", JSON.stringify([...existingUsers, newUser]));
-
-    // Auto Login after Signup
-    const { password, ...userWithoutPass } = newUser;
-    localStorage.setItem("currentUser", JSON.stringify(userWithoutPass));
-    setUser(userWithoutPass);
-
-    setError(null);
-    router.push("/profile");
   };
 
-  const login = (email: string, pass: string) => {
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const foundUser = users.find(
-      (u: any) => u.email === email && u.password === pass,
-    );
+  const login = async (email: string, pass: string) => {
+    try {
+      const response = await fetch("https://stallion-registry-back-end.vercel.app/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password: pass }),
+      });
 
-    if (foundUser) {
-      const { password, ...userWithoutPass } = foundUser;
-      localStorage.setItem("currentUser", JSON.stringify(userWithoutPass));
-      setUser(userWithoutPass);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      // 🔥 Save JWT + user
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("currentUser", JSON.stringify(data.user));
+
+      setUser(data.user);
       setError(null);
       router.push("/profile");
-    } else {
-      setError("Invalid email or password.");
+    } catch (err: any) {
+      setError(err.message);
     }
   };
 
   const logout = () => {
     localStorage.removeItem("currentUser");
+    localStorage.removeItem("token");
     setUser(null);
     router.push("/login");
   };

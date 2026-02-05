@@ -75,12 +75,43 @@ function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
   );
 }
 
+const uploadToImgBB = async (file: File) => {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const res = await fetch(
+    `https://api.imgbb.com/1/upload?key=1643ab44839cd5df1ab6b987ebea17af`,
+    { method: "POST", body: formData },
+  );
+  const data = await res.json();
+  return data.data.url;
+};
+
+const uploadPDF = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "stallion_uploads");
+  formData.append("resource_type", "raw"); // correct type
+
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/dmclys9tv/auto/upload", // 🔥 use AUTO
+    { method: "POST", body: formData }
+  );
+
+  const data = await res.json();
+  console.log("pdf")
+  return data.secure_url; // this will open in browser
+};
+
+
 function FileUpload({
   label,
   required,
+  onUploaded,
 }: {
   label: string;
   required?: boolean;
+  onUploaded?: (url: string) => void;
 }) {
   return (
     <div className="mt-1">
@@ -88,7 +119,25 @@ function FileUpload({
         <span className="text-xs text-zinc-400">
           {label} {required ? "*" : "(Optional)"}
         </span>
-        <input type="file" className="hidden" />
+        <input
+          type="file"
+          className="hidden"
+          onChange={async (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+
+            let url = "";
+
+            if (file.type.startsWith("image/")) {
+              url = await uploadToImgBB(file);
+            } else if (file.type === "application/pdf") {
+              console.log("this is pgf")
+              url = await uploadPDF(file);
+            }
+
+            if (onUploaded && url) onUploaded(url);
+          }}
+        />
       </label>
     </div>
   );
@@ -234,7 +283,7 @@ export default function SubmitStallionPage() {
   };
 
   // SubmitStallionPage কম্পোনেন্টের ভেতরে এই ফাংশনটি যোগ করো
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!canSubmit) {
@@ -242,9 +291,7 @@ export default function SubmitStallionPage() {
       return;
     }
 
-    // ১. নতুন ঘোড়ার অবজেক্ট তৈরি (প্রোফাইল পেজের ফরম্যাটে)
     const newStallion = {
-      id: Date.now().toString(), // ইউনিক আইডি জেনারেট করা
       registeredName,
       status,
       countryOfStanding,
@@ -264,34 +311,25 @@ export default function SubmitStallionPage() {
         galleryUrls,
         videoUrl,
       },
-      submittedAt: new Date().toISOString(),
     };
 
-    // ২. লোকাল স্টোরেজ থেকে সব ইউজারদের ডেটা আনা
-    const currentUsers = JSON.parse(localStorage.getItem("users") || "[]");
-    const currentUserIndex = currentUsers.findIndex(
-      (u: any) => u.email === user?.email,
-    );
+    const token = localStorage.getItem("token");
 
-    if (currentUserIndex !== -1 && user) {
-      // ৩. ইউজারের registeredStallions লিস্ট আপডেট করা
-      const updatedUser = {
-        ...user,
-        registeredStallions: [...(user.registeredStallions || []), newStallion],
-      };
+    const response = await fetch("https://stallion-registry-back-end.vercel.app/stallions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // 🔥 JWT sent
+      },
+      body: JSON.stringify(newStallion),
+    });
 
-      // ৪. Context এবং LocalStorage আপডেট করা
-      // এখানে সরাসরি LocalStorage আপডেট করছি যেহেতু Context এর জন্য আলাদা ফাংশন লিখিনি
-      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+    const data = await response.json();
 
-      currentUsers[currentUserIndex].registeredStallions =
-        updatedUser.registeredStallions;
-      localStorage.setItem("users", JSON.stringify(currentUsers));
-      // router.push("/payment");
-      // alert(
-      //   "Stallion submitted successfully! It is now visible in your profile.",
-      // );
-      window.location.href = "/payment"; // প্রোফাইল পেজে রিডাইরেক্ট
+    if (response.ok) {
+      window.location.href = "/payment";
+    } else {
+      alert(data.message);
     }
   };
 
@@ -401,7 +439,11 @@ export default function SubmitStallionPage() {
               <FieldLabel>
                 Upload Registration Papers * (Pedigree verification)
               </FieldLabel>
-              <FileUpload label="Upload PDF or Image" required />
+              <FileUpload
+                label="Upload PDF or Image"
+                required
+                onUploaded={(url) => setOfficialRegistryLink(url)}
+              />
             </div>
           </div>
         </SectionCard>
@@ -640,7 +682,11 @@ export default function SubmitStallionPage() {
                 placeholder="e.g. 5-panel N/N"
                 rows={2}
               />
-              <FileUpload label="Upload Disease Results" required />
+              <FileUpload
+                label="Upload Disease Results"
+                required
+                onUploaded={(url) => setDiseaseTesting(url)}
+              />
             </div>
             <div>
               <FieldLabel>Colour Testing (Optional)</FieldLabel>
@@ -650,7 +696,10 @@ export default function SubmitStallionPage() {
                 placeholder="e.g. E/E, a/a"
                 rows={2}
               />
-              <FileUpload label="Upload Colour Results" />
+              <FileUpload
+                label="Upload Colour Results"
+                onUploaded={(url) => setColourTesting(url)}
+              />
             </div>
           </div>
         </SectionCard>
@@ -659,27 +708,26 @@ export default function SubmitStallionPage() {
         <SectionCard title="Media" subtitle="Maximum 4 photos and 1 video.">
           <div className="space-y-4">
             <div>
-              <FieldLabel>Primary Hero Image URL *</FieldLabel>
-              <Input
-                value={primaryImageUrl}
-                onChange={(e) => setPrimaryImageUrl(e.target.value)}
-                placeholder="https://..."
+              <FieldLabel>Primary Hero Image *</FieldLabel>
+
+              <FileUpload
+                label="Upload Primary Image"
+                required
+                onUploaded={(url) => setPrimaryImageUrl(url)}
               />
             </div>
+
             <div className="grid gap-4 sm:grid-cols-3">
-              {galleryUrls.map((url, i) => (
-                <div key={i}>
-                  <FieldLabel>Gallery Image {i + 1}</FieldLabel>
-                  <Input
-                    value={url}
-                    onChange={(e) => {
-                      const newUrls = [...galleryUrls];
-                      newUrls[i] = e.target.value;
-                      setGalleryUrls(newUrls);
-                    }}
-                    placeholder="Optional"
-                  />
-                </div>
+              {galleryUrls.map((_, i) => (
+                <FileUpload
+                  key={i}
+                  label={`Gallery Image ${i + 1}`}
+                  onUploaded={(url) => {
+                    const newUrls = [...galleryUrls];
+                    newUrls[i] = url;
+                    setGalleryUrls(newUrls);
+                  }}
+                />
               ))}
             </div>
             <div>
