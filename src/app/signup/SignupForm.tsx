@@ -22,12 +22,13 @@ export default function SignupForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response: any = await signup({ 
-        name, 
-        email, 
-        subscription: "free", 
-        registeredStallions: [], 
-        favorites: [] 
+      const response: any = signup({
+        name,
+        email,
+        subscription: "free",
+        registeredStallions: [],
+        favorites: [],
+        role: ""
       }, password);
       
       if (response) {
