@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/immutability */
 "use client";
 
@@ -22,60 +23,87 @@ export default function AdminDashboard() {
   const [tab, setTab] = useState<"users" | "stallions">("users");
   const [users, setUsers] = useState<User[]>([]);
   const [stallions, setStallions] = useState<Stallion[]>([]);
-
-  const adminUser = JSON.parse(localStorage.getItem("adminUser") || "{}");
+  // localStorage এর জন্য আলাদা স্টেট
+  const [adminUser, setAdminUser] = useState<any>({});
 
   useEffect(() => {
+    // মাউন্ট হওয়ার পর ব্রাউজারে ডাটা সেট হবে
+    const storedUser = localStorage.getItem("adminUser");
+    if (storedUser) {
+      setAdminUser(JSON.parse(storedUser));
+    }
+
     fetchUsers();
     fetchStallions();
   }, []);
 
   const fetchUsers = async () => {
+    // localStorage অ্যাক্সেস করার আগে চেক করে নেওয়া ভালো (Client-only check)
+    if (typeof window === "undefined") return;
+
     const token = localStorage.getItem("adminToken");
-    const res = await fetch("https://stallion-registry-back-end.vercel.app/admin/users", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await fetch(
+      "https://stallion-registry-back-end.vercel.app/admin/users",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
     const data = await res.json();
     setUsers(data);
   };
 
   const fetchStallions = async () => {
+    if (typeof window === "undefined") return;
+
     const token = localStorage.getItem("adminToken");
-    const res = await fetch("https://stallion-registry-back-end.vercel.app/admin/stallions", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await fetch(
+      "https://stallion-registry-back-end.vercel.app/admin/stallions",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
     const data = await res.json();
     setStallions(data);
   };
 
   const deleteUser = async (id: string) => {
     const token = localStorage.getItem("adminToken");
-    await fetch(`https://stallion-registry-back-end.vercel.app/admin/users/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    await fetch(
+      `https://stallion-registry-back-end.vercel.app/admin/users/${id}`,
+      {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
     fetchUsers();
   };
 
   const deleteStallion = async (id: string) => {
     const token = localStorage.getItem("adminToken");
-    await fetch(`https://stallion-registry-back-end.vercel.app/admin/stallions/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    await fetch(
+      `https://stallion-registry-back-end.vercel.app/admin/stallions/${id}`,
+      {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
     fetchStallions();
   };
 
   const toggleApproval = async (id: string) => {
     const token = localStorage.getItem("adminToken");
-    await fetch(`https://stallion-registry-back-end.vercel.app/admin/stallions/approve/${id}`, {
-      method: "PATCH",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    await fetch(
+      `https://stallion-registry-back-end.vercel.app/admin/stallions/approve/${id}`,
+      {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
     fetchStallions();
   };
 
-  const filteredUsers = users.filter((u) => u._id !== adminUser._id);
+  // Filter logic logic inside render to be safe
+  const filteredUsers = users.filter((u) => u._id !== adminUser?._id);
   const approved = stallions.filter((s) => s.approved);
   const pending = stallions.filter((s) => !s.approved);
 
@@ -84,8 +112,12 @@ export default function AdminDashboard() {
       <h1 className="text-2xl font-bold">Admin Dashboard</h1>
 
       <div className="flex gap-4">
-        <button onClick={() => setTab("users")} className="tab-btn">Users</button>
-        <button onClick={() => setTab("stallions")} className="tab-btn">Stallions</button>
+        <button onClick={() => setTab("users")} className="tab-btn">
+          Users
+        </button>
+        <button onClick={() => setTab("stallions")} className="tab-btn">
+          Stallions
+        </button>
       </div>
 
       {tab === "users" && (
@@ -94,7 +126,10 @@ export default function AdminDashboard() {
           <table className="admin-table">
             <thead>
               <tr>
-                <th>Name</th><th>Email</th><th>Role</th><th>Action</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -104,7 +139,12 @@ export default function AdminDashboard() {
                   <td>{u.email}</td>
                   <td>{u.role}</td>
                   <td>
-                    <button className="delete-btn" onClick={() => deleteUser(u._id)}>Delete</button>
+                    <button
+                      className="delete-btn"
+                      onClick={() => deleteUser(u._id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -116,9 +156,18 @@ export default function AdminDashboard() {
       {tab === "stallions" && (
         <section className="space-y-10">
           <div>
-            <h2 className="text-lg font-semibold mb-2 text-green-400">Approved Stallions</h2>
+            <h2 className="text-lg font-semibold mb-2 text-green-400">
+              Approved Stallions
+            </h2>
             <table className="admin-table">
-              <thead><tr><th>Name</th><th>Owner</th><th>Country</th><th>Actions</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Owner</th>
+                  <th>Country</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
               <tbody>
                 {approved.map((s) => (
                   <tr key={s._id}>
@@ -126,8 +175,18 @@ export default function AdminDashboard() {
                     <td>{s.owner?.name}</td>
                     <td>{s.countryOfStanding}</td>
                     <td className="flex gap-2">
-                      <button className="delete-btn" onClick={() => deleteStallion(s._id)}>Delete</button>
-                      <button className="approve-btn" onClick={() => toggleApproval(s._id)}>Unapprove</button>
+                      <button
+                        className="delete-btn"
+                        onClick={() => deleteStallion(s._id)}
+                      >
+                        Delete
+                      </button>
+                      <button
+                        className="approve-btn"
+                        onClick={() => toggleApproval(s._id)}
+                      >
+                        Unapprove
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -136,9 +195,18 @@ export default function AdminDashboard() {
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold mb-2 text-yellow-400">Pending Approval</h2>
+            <h2 className="text-lg font-semibold mb-2 text-yellow-400">
+              Pending Approval
+            </h2>
             <table className="admin-table">
-              <thead><tr><th>Name</th><th>Owner</th><th>Country</th><th>Actions</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Owner</th>
+                  <th>Country</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
               <tbody>
                 {pending.map((s) => (
                   <tr key={s._id}>
@@ -146,8 +214,18 @@ export default function AdminDashboard() {
                     <td>{s.owner?.name}</td>
                     <td>{s.countryOfStanding}</td>
                     <td className="flex gap-2">
-                      <button className="delete-btn" onClick={() => deleteStallion(s._id)}>Delete</button>
-                      <button className="approve-btn" onClick={() => toggleApproval(s._id)}>Approve</button>
+                      <button
+                        className="delete-btn"
+                        onClick={() => deleteStallion(s._id)}
+                      >
+                        Delete
+                      </button>
+                      <button
+                        className="approve-btn"
+                        onClick={() => toggleApproval(s._id)}
+                      >
+                        Approve
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -158,11 +236,35 @@ export default function AdminDashboard() {
       )}
 
       <style jsx>{`
-        .tab-btn { padding: 8px 14px; border: 1px solid #d4af37; }
-        .admin-table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #333; padding: 10px; }
-        .delete-btn { background: #991b1b; padding: 6px 10px; }
-        .approve-btn { background: #15803d; padding: 6px 10px; }
+        .tab-btn {
+          padding: 8px 14px;
+          border: 1px solid #d4af37;
+          cursor: pointer;
+        }
+        .admin-table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        th,
+        td {
+          border: 1px solid #333;
+          padding: 10px;
+          text-align: left;
+        }
+        .delete-btn {
+          background: #991b1b;
+          padding: 6px 10px;
+          cursor: pointer;
+          border: none;
+          border-radius: 4px;
+        }
+        .approve-btn {
+          background: #15803d;
+          padding: 6px 10px;
+          cursor: pointer;
+          border: none;
+          border-radius: 4px;
+        }
       `}</style>
     </div>
   );
