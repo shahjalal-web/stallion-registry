@@ -134,7 +134,7 @@ export type Stallion = {
   media?: {
     primaryImageUrl?: string;
     gallery?: GalleryImage[];
-    videos?: VideoReference[];
+    videoUrl?: string;
   };
 
   isFoundingMember?: boolean;
