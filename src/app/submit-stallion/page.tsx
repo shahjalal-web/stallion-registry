@@ -95,14 +95,13 @@ const uploadPDF = async (file: File) => {
 
   const res = await fetch(
     "https://api.cloudinary.com/v1_1/dmclys9tv/auto/upload", // 🔥 use AUTO
-    { method: "POST", body: formData }
+    { method: "POST", body: formData },
   );
 
   const data = await res.json();
-  console.log("pdf")
+  console.log("pdf");
   return data.secure_url; // this will open in browser
 };
-
 
 function FileUpload({
   label,
@@ -131,7 +130,7 @@ function FileUpload({
             if (file.type.startsWith("image/")) {
               url = await uploadToImgBB(file);
             } else if (file.type === "application/pdf") {
-              console.log("this is pgf")
+              console.log("this is pgf");
               url = await uploadPDF(file);
             }
 
@@ -213,6 +212,16 @@ export default function SubmitStallionPage() {
   const [galleryUrls, setGalleryUrls] = useState(["", "", ""]);
   const [videoUrl, setVideoUrl] = useState("");
 
+  const parseStudFee = (input: string) => {
+    const [value, currency] = input.split(" ");
+    return value && currency ? { value: Number(value), currency } : null;
+  };
+
+  const parseHeight = (input: string) => {
+    if (!input) return null;
+    return { value: Number(input), unit: "HH" };
+  };
+
   useEffect(() => {
     if (!user) {
       setShowAuthModal(true);
@@ -291,45 +300,89 @@ export default function SubmitStallionPage() {
       return;
     }
 
-    const newStallion = {
+    const stallionPayload = {
+      // ---- CORE ----
       registeredName,
-      status,
+      status, // Standing / Deceased etc
       countryOfStanding,
-      yearOfBirth,
-      height,
+      yearOfBirth: Number(yearOfBirth),
+      height: parseHeight(height),
+
+      // ---- REGISTRY ----
       registrationNumber,
       officialRegistryLink,
-      studFee,
-      guarantee,
-      breedingStats,
-      diseaseTesting,
-      colourTesting,
-      performanceRows,
-      progenyRows,
+
+      // ---- BREEDING ----
+      studFee: parseStudFee(studFee),
+      breedingGuarantees: guarantee,
+      breedingStatistics: breedingStats ? { notes: breedingStats } : undefined,
+
+      // ---- TESTING ----
+      diseaseTestingResults: diseaseTesting,
+      colourTestingResults: colourTesting,
+
+      // ---- PERFORMANCE ----
+      performanceRecords: performanceRows
+        .filter((r) => r.year && r.event)
+        .map((r) => ({
+          year: Number(r.year),
+          event: r.event,
+          discipline: r.discipline,
+          result: r.result,
+          reference: r.reference
+            ? { label: "Reference", href: r.reference }
+            : undefined,
+          notes: r.notes,
+          judges: r.judges,
+          levelEarnings: r.levelEarnings
+            ? { value: Number(r.levelEarnings), currency: "USD" }
+            : undefined,
+        })),
+
+      // ---- PROGENY ----
+      notableProgeny: progenyRows
+        .filter((p) => p.name)
+        .map((p) => ({
+          name: p.name,
+          year: p.year ? Number(p.year) : undefined,
+          association: p.association,
+          discipline: p.discipline,
+          result: p.result,
+          reference: p.reference
+            ? { label: "Reference", href: p.reference }
+            : undefined,
+        })),
+
+      // ---- MEDIA ----
       media: {
         primaryImageUrl,
-        galleryUrls,
-        videoUrl,
+        gallery: galleryUrls.filter(Boolean).map((url) => ({ url })),
+        videos: videoUrl ? [{ url: videoUrl, type: "reference" }] : [],
       },
+
+      hasActiveSubscription,
     };
 
     const token = localStorage.getItem("token");
 
-    const response = await fetch("https://stallion-registry-back-end.vercel.app/stallions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // 🔥 JWT sent
+    const response = await fetch(
+      "https://stallion-registry-back-end.vercel.app/stallions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(stallionPayload),
       },
-      body: JSON.stringify(newStallion),
-    });
+    );
 
     const data = await response.json();
 
     if (response.ok) {
       window.location.href = "/payment";
     } else {
-      alert(data.message);
+      alert(data.message || "Submission failed");
     }
   };
 
