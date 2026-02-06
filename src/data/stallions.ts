@@ -358,12 +358,7 @@ export const stallions: Stallion[] = [
           caption: "Performance reference",
         },
       ],
-      videos: [
-        {
-          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-          type: "movement reference",
-        },
-      ],
+      videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     },
 
     isFoundingMember: true,
@@ -674,12 +669,7 @@ export const stallions: Stallion[] = [
           caption: "Movement reference",
         },
       ],
-      videos: [
-        {
-          url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-          type: "performance reference",
-        },
-      ],
+      videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     },
 
     isFoundingMember: false,
@@ -912,7 +902,7 @@ export const stallions: Stallion[] = [
       primaryImageUrl:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwh-akp4FTBCr52OuTycxK9gw8e6nFa0DqXw&s",
       gallery: [],
-      videos: [],
+      videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     },
 
     isFoundingMember: false,
