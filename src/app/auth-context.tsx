@@ -5,6 +5,15 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+import { auth, db } from "../lib/firebase"; // Apnar firebase setup file
+import {
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+
 interface User {
   role: string;
   name: string;
@@ -17,6 +26,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (email: string, pass: string) => void;
+  resetPassword: (email: string) => void;
   signup: (userData: User, pass: string) => void;
   logout: () => void;
   toggleFavorite: (stallion: any) => void;
@@ -38,56 +48,101 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signup = async (userData: User, pass: string) => {
     try {
+      // 1️⃣ Step 1: Age MongoDB-te store kora
       const response = await fetch("https://stallion-registry-back-end.vercel.app/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...userData,
-          password: pass,
+          password: pass, // Plain password pathachhen backend-e hash korar jonno
         }),
       });
 
       const data = await response.json();
-      console.log("hello");
-      if (!response.ok) {
-        throw new Error(data.message || "Signup failed");
-      }
 
-      // 🔥 user + token store
+      if (!response.ok) {
+        throw new Error(data.message || "MongoDB Signup failed");
+      }
+      console.log(userData.email, pass);
+      // 2️⃣ Step 2: MongoDB success hole Firebase Auth-e user create kora
+      createUserWithEmailAndPassword(auth, userData.email, pass)
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          console.log(user, "user form firebase");
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(error, "error");
+          // ..
+        });
+
+      // 4️⃣ Step 4: Final Success Logic
       localStorage.setItem("currentUser", JSON.stringify(data.user));
       localStorage.setItem("token", data.token);
-
       setUser(data.user);
       setError(null);
 
       router.push("/profile");
     } catch (err: any) {
       setError(err.message);
+      console.error("Signup Error:", err.message);
+
+      // Optional: Jodi MongoDB success hoy kintu Firebase fail kore,
+      // tobe apni chaile backend-e ekta 'delete' request pathiye data clean korte paren.
     }
   };
-
   const login = async (email: string, pass: string) => {
     try {
-      const response = await fetch("https://stallion-registry-back-end.vercel.app/login", {
+      // 1. Firebase Auth (main authority)
+      const firebaseUser = await signInWithEmailAndPassword(auth, email, pass);
+
+      // 2. MongoDB login (with password)
+      let response = await fetch("https://stallion-registry-back-end.vercel.app/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password: pass }),
       });
 
-      const data = await response.json();
+      let data = await response.json();
+
+      // 3. Firebase ok but MongoDB password mismatch
+      if (!response.ok && firebaseUser) {
+        if (data.code === "PASSWORD_MISMATCH") {
+          // 4. Sync MongoDB password
+          const syncResponse = await fetch(
+            "https://stallion-registry-back-end.vercel.app/sync-password",
+            {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, newPassword: pass }),
+            },
+          );
+
+          if (!syncResponse.ok) {
+            throw new Error("Password sync failed");
+          }
+
+          // 5. MongoDB login retry (ONCE)
+          response = await fetch("https://stallion-registry-back-end.vercel.app/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password: pass }),
+          });
+
+          data = await response.json();
+        }
+      }
 
       if (!response.ok) {
         throw new Error(data.message || "Login failed");
       }
 
-      // 🔥 Save JWT + user
+      // 6. Success
       localStorage.setItem("token", data.token);
       localStorage.setItem("currentUser", JSON.stringify(data.user));
-
       setUser(data.user);
       setError(null);
       router.push("/profile");
@@ -101,6 +156,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("token");
     setUser(null);
     router.push("/login");
+  };
+
+  // auth-context er bhitore add koren:
+  const resetPassword = async (email: string) => {
+    try {
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          console.log("reset mail are send");
+        })
+        .catch((error) => {
+          console.log(error);
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // ..
+        });
+      alert("Password reset link sent to your email! if you can not find the email, please check your spam folder.");
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   const toggleFavorite = (stallion: any) => {
@@ -172,6 +246,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
+        resetPassword,
         login,
         signup,
         logout,

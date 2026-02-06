@@ -3,6 +3,7 @@
 "use client";
 
 import { useAuth } from "@/app/auth-context";
+import { signOutUser } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -50,6 +51,7 @@ export default function Navbar() {
   const isActive = (href: string) => pathname === href;
 
   const handleLogout = () => {
+    signOutUser(); // Firebase থেকে user sign out
     logout(); // user logout
     localStorage.removeItem("adminUser");
     localStorage.removeItem("adminToken");

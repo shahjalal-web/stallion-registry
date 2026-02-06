@@ -1,10 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client"; // Required for state
 import Link from "next/link";
+import { useState, useRef, useEffect } from "react";
 
 export default function Footer() {
+  const [resourcesOpen, setResourcesOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: { target: any }) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setResourcesOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <footer className="bg-black text-zinc-400 text-sm border-t border-zinc-800">
       <div className="mx-auto max-w-6xl px-6 py-12 grid gap-10 md:grid-cols-3">
-        {/* Brand Section - Content from Image 4 */}
+        {/* Brand Section */}
         <div className="space-y-4">
           <div>
             <p className="text-white font-semibold">Leading Sires Registry</p>
@@ -18,12 +35,9 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Navigation Section - Updated Titles from Image 4 */}
+        {/* Navigation Section */}
         <div className="flex flex-col space-y-2 text-xs uppercase tracking-widest text-center md:text-left">
-          <Link
-            href="/"
-            className="hover:text-white transition-colors"
-          >
+          <Link href="/" className="hover:text-white transition-colors">
             Registry
           </Link>
           <Link
@@ -32,10 +46,35 @@ export default function Footer() {
           >
             Stallion Directory
           </Link>
-          {/* <Link href="/" className="hover:text-white transition-colors">
-            Owners
-          </Link> */}
-          
+
+          {/* Resources Dropdown Added Here */}
+          <div className="relative inline-block" ref={dropdownRef}>
+            <button
+              onClick={() => setResourcesOpen((v) => !v)}
+              className="hover:text-white transition-colors uppercase tracking-widest"
+            >
+              Resources {resourcesOpen ? "▴" : "▾"}
+            </button>
+            {resourcesOpen && (
+              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 w-56 rounded-lg border border-zinc-800 bg-zinc-950 shadow-2xl z-50 py-2">
+                <Link
+                  onClick={() => setResourcesOpen((v) => !v)}
+                  href="/resources"
+                  className="block px-4 py-2 text-zinc-300 hover:bg-zinc-900 normal-case tracking-normal"
+                >
+                  Commercial Directory
+                </Link>
+                <Link
+                  onClick={() => setResourcesOpen((v) => !v)}
+                  href="/resources/associations"
+                  className="block px-4 py-2 text-zinc-300 hover:bg-zinc-900 normal-case tracking-normal"
+                >
+                  Associations & Registries
+                </Link>
+              </div>
+            )}
+          </div>
+
           <Link href="/pricing" className="hover:text-white transition-colors">
             Pricing
           </Link>
@@ -48,12 +87,9 @@ export default function Footer() {
           <Link href="/about" className="hover:text-white transition-colors">
             About
           </Link>
-          {/* <Link href="/" className="hover:text-white transition-colors">
-            Contact
-          </Link> */}
         </div>
 
-        {/* Contact Section - Updated from Image 4 */}
+        {/* Contact Section */}
         <div className="md:text-right space-y-4">
           <a
             href="mailto:info@leadingsiresregistry.com"
@@ -62,7 +98,6 @@ export default function Footer() {
             info@leadingsiresregistry.com
           </a>
           <div className="flex justify-center md:justify-end">
-            {/* Link icon placeholder from image */}
             <svg
               className="w-4 h-4 text-zinc-500"
               fill="none"
@@ -80,7 +115,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Legal Section - Styled as per Image 4 */}
+      {/* Legal Section */}
       <div className="border-t border-zinc-900 px-6 py-6 text-center">
         <div className="mx-auto max-w-6xl flex flex-col gap-4">
           <p className="text-[10px] text-zinc-600 leading-relaxed">

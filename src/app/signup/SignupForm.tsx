@@ -19,21 +19,21 @@ export default function SignupForm() {
 
   const redirectTo = searchParams.get("redirect") || "/profile";
 
-  const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response: any = signup({
+      // 🔴 Problem: await deya chilo na, tai sync hovchilo na
+      await signup({
         name,
         email,
         subscription: "free",
         registeredStallions: [],
         favorites: [],
-        role: ""
+        role: "user"
       }, password);
       
-      if (response) {
-        router.push(redirectTo); 
-      }
+      // signup function-er bhitorei redirect logic thakle eikhan theke push korar dorkar nai
+      // Kintu jodi eikhan theke korte chan, tobe nishchito hon signup success hoyeche
     } catch (err) {
       console.error("Signup failed:", err);
     }
